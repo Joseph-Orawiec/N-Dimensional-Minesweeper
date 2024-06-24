@@ -1,7 +1,8 @@
 res://wallhaven_136m_9w_2560x_1440.tscn
+res://grid_container.gd
 res://cell.tscn
 res://camera_2d.tscn
 res://node_2d.tscn
 res://camera_2d.gd
-res://node_2d.gd
-res://grid_container.gd
+res://Wallhaven-136m9w2560x1440.gd
+res://texture_rect.tscn

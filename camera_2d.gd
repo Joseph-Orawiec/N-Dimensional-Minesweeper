@@ -5,11 +5,10 @@ var is_dragging
 const pa = 1.11 # Area proportionality constant
 const zoom_min = .3
 const zoom_max = 4
-const dx = 100
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print(posmod(-100, 640))
+	pass
 
 
 func vector_mod(u, v):
@@ -60,9 +59,14 @@ func _process(delta):
 			# clamp value
 			zoom2 = zoom2.clamp(Vector2(1, 1) * zoom_min, Vector2(1, 1) * zoom_max)
 			
+			print(get_global_mouse_position(), mouse_position, position, d, zoom2)
+			
 			# using the formula i derived
 			position = mouse_position + d * (zoom / zoom2)
 			zoom = zoom2
+			
+			print(position)
+			
 		if Input.is_action_just_pressed('scroll_down'):
 			# zoom2 = (zoom * get_viewport().size.x)/(get_viewport().size.x * Vector2(1, 1) + zoom * dx)
 			

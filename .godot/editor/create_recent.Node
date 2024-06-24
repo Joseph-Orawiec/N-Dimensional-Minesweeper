@@ -1,9 +1,12 @@
+TextureRect
+CanvasLayer
+Control
+Node2D
+Camera2D
 GridContainer
 SubViewport
 SubViewportContainer
 RichTextLabel
-Node2D
-CanvasLayer
 Sprite2D
 CollisionShape2D
 StaticBody2D

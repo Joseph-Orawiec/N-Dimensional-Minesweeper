@@ -47,6 +47,3 @@ render_target_update_mode = 4
 
 [node name="Camera2D" parent="SubViewportContainer2/SubViewport2" groups=["cameras"] instance=ExtResource("3_yrrwc")]
 script = null
-
-[node name="TextureRect" type="TextureRect" parent="."]
-layout_mode = 2
