@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://w8wixvvrkxuq"]
+
+[ext_resource type="Texture2D" uid="uid://bwslrjwceesrm" path="res://wallhaven-136m9w_2560x1440.png" id="1_th0gl"]
+[ext_resource type="Script" path="res://Wallhaven-136m9w2560x1440.gd" id="2_y5ndv"]
+[ext_resource type="PackedScene" uid="uid://hjwtsl445pau" path="res://cell.tscn" id="3_4gv1c"]
+[ext_resource type="Texture2D" uid="uid://d0b2wxtvfq0n6" path="res://icon.svg" id="3_png1b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yn0go"]
+size = Vector2(395, 389)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hdbpb"]
+size = Vector2(468, 426)
+
+[node name="Wallhaven-136m9w2560x1440" type="Sprite2D"]
+texture = ExtResource("1_th0gl")
+script = ExtResource("2_y5ndv")
+
+[node name="Cell" parent="." instance=ExtResource("3_4gv1c")]
+position = Vector2(-49, -536)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-959, -436)
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_yn0go")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(-1.52588e-05, 0)
+scale = Vector2(3.09375, 3.01563)
+texture = ExtResource("3_png1b")
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(-18, 72)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Area2D"]
+position = Vector2(1.90139e-05, 3.05176e-05)
+scale = Vector2(3.65625, 3.32813)
+texture = ExtResource("3_png1b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_hdbpb")

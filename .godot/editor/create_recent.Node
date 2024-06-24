@@ -1,0 +1,11 @@
+GridContainer
+SubViewport
+SubViewportContainer
+RichTextLabel
+Node2D
+CanvasLayer
+Sprite2D
+CollisionShape2D
+StaticBody2D
+Area2D
+TileMap
