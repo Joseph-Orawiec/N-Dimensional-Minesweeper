@@ -19,12 +19,7 @@ func _process(delta):
 	
 
 	if Input.is_key_pressed(KEY_CTRL):
-		# Zoom based on cursor position
-		# https://www.desmos.com/calculator/b7ufjha1ss
-		# I couldn't find anything online that actually helped, so i did the derivation myself
-
-		# i need to get each camera to behave as if the cursor is on it's specific viewport (so zooming is uniform)
-		# distance vector should be the same vector for all cameras during runtime
+		
 		
 		var mouse_position = position + vector_mod(get_global_mouse_position() - position, get_viewport_rect().size * 1/zoom)
 		#var mouse_position = get_global_mouse_position()
