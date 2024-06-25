@@ -38,7 +38,7 @@ func _input(event):
 	# get_global and get_local mouse position will return the same value and returns the position wrt to the main viewport
 	# i need it in terms of the coordinate space of the subviewport world and wrt to the top left cameras position
 	# so i need to scale the coordinates by the zoom facter, and then add to get it wrt to the camera
-	# have a desmos graph, this shows the mouse_position https://www.desmos.com/calculator/cazcsrubae
+	# have a desmos graph, this shows the mouse_position function https://www.desmos.com/calculator/dc7cfi4urn
 	var local_mouse_position = get_global_mouse_position() * 1/zoom1 + cameras[0].position
 	var mouse_position = cameras[0].position + vector_mod(local_mouse_position - cameras[0].position, cameras[0].get_viewport_rect().size * 1/zoom1)
 	
