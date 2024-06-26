@@ -3,8 +3,8 @@ extends GridContainer
 var previous_coordinates
 var is_dragging
 const pa = 1.11 # Area proportionality constant
-const zoom_min = .3
-const zoom_max = 4
+const zoom_min = pow(1.11, -22/2) #roughly .3
+const zoom_max = pow(1.11, 21/2) #roughly 2.9915
 
 @onready var cameras = get_tree().get_nodes_in_group("cameras")
 @onready var zoom1 = cameras[0].zoom
@@ -47,17 +47,6 @@ func _input(event):
 	var d = cameras[0].position - mouse_position
 	var zoom2 = 1 # to be determined later
 	
-	if event.is_action_pressed("m1"):
-			for c in cameras:
-				print(c.position)
-			
-	if event.is_action_pressed("m2"):
-		print(cameras[0].get_viewport().get_mouse_position())
-		print(get_local_mouse_position(), get_global_mouse_position(), mouse_position, cameras[0].position, d)
-		
-		print(get_global_mouse_position(), local_mouse_position, mouse_position, d)
-
-	
 	if event.is_action_pressed('zoom_in'):
 		
 		# new zoom amount
@@ -70,15 +59,11 @@ func _input(event):
 		var position2 = (mouse_position + d * (zoom1 / zoom2))
 		var position_delta = position2 - cameras[0].position
 		
-		print(get_global_mouse_position(), local_mouse_position, mouse_position, d, position_delta)
-		
 		# set all values
 		zoom1 = zoom2
 		for c in cameras:
-			print('p0', c.position)
 			c.zoom = zoom1
 			c.position += position_delta
-			print('p1', c.position)
 			
 	if event.is_action_pressed('zoom_out'):
 		# take the reciprocal instead

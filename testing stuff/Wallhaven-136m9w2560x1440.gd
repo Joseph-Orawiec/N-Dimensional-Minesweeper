@@ -23,7 +23,7 @@ func _on_static_body_2d_mouse_entered():
 	
 func _input(event):
 	if event.is_action_pressed("space"):
-		var node = load("res://cell.tscn").instantiate()
+		var node = load("res://testing stuff/cell.tscn").instantiate()
 		node.position = get_global_mouse_position()
 		print(node.position)
 		add_child(node)

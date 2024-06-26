@@ -1,8 +1,12 @@
+res://texture_rect.tscn
+res://camera_test.tscn
 res://wallhaven_136m_9w_2560x_1440.tscn
-res://grid_container.gd
 res://cell.tscn
 res://camera_2d.tscn
-res://node_2d.tscn
-res://camera_2d.gd
-res://Wallhaven-136m9w2560x1440.gd
-res://texture_rect.tscn
+res://testing stuff/wallhaven_136m_9w_2560x_1440.tscn
+res://testing stuff/cell.tscn
+res://testing stuff/camera_2d.tscn
+res://testing stuff/camera_test.tscn
+res://testing stuff/texture_rect.tscn
+res://testing stuff/Wallhaven-136m9w2560x1440.gd
+res://scenes/camera_container/grid_container.gd

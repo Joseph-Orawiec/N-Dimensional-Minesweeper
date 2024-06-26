@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bhik3mu6w1dw4"
-path="res://.godot/imported/AHDIJHJKADJKHDA.PNG-5974fa92d3835ec83dfdd6f6ebb52621.ctex"
+uid="uid://bwslrjwceesrm"
+path="res://.godot/imported/wallhaven-136m9w_2560x1440.png-96261536d34604fcf6bd729f458ae635.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://AHDIJHJKADJKHDA.PNG"
-dest_files=["res://.godot/imported/AHDIJHJKADJKHDA.PNG-5974fa92d3835ec83dfdd6f6ebb52621.ctex"]
+source_file="res://testing stuff/wallhaven-136m9w_2560x1440.png"
+dest_files=["res://.godot/imported/wallhaven-136m9w_2560x1440.png-96261536d34604fcf6bd729f458ae635.ctex"]
 
 [params]
 
