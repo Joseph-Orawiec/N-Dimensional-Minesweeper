@@ -6,17 +6,36 @@ const pa = 1.11 # Area proportionality constant
 const zoom_min = pow(1.11, -22/2) #roughly .3
 const zoom_max = pow(1.11, 21/2) #roughly 2.9915
 
-@onready var cameras = get_tree().get_nodes_in_group("cameras")
-@onready var zoom1 = cameras[0].zoom
+var cameras #placeholder to be initialized later
+var zoom1 #placeholder to be initialized later
+
+@onready var main_viewport = $SubViewportContainer
+@onready var main_subiewport = $SubViewportContainer/SubViewport
+@onready var main_camera = $SubViewportContainer/SubViewport/Camera2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var vp1 = $SubViewportContainer/SubViewport
-	var vp2 = $SubViewportContainer2/SubViewport2
+	pass
 	
-	$SubViewportContainer2/SubViewport2/Camera2D.position = Vector2(640, 0)
-	vp2.world_2d = vp1.world_2d
 
+func initialize(node, n):
+	const dx = 1280
+	const dy = 720
+	columns = n
+	
+	for i in (n * n) - 1:
+		var node2 = main_viewport.duplicate()
+		node2.get_child(0).world_2d = main_subiewport.world_2d
+		node2.get_child(0).get_child(0).position = main_camera.position + Vector2((dx/n) * ((i + 1) % n), (dy/n) * ((i + 1) / n))
+		add_child(node2)
+		
+	print_tree_pretty()
+	
+	cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
+	zoom1 = cameras[0].zoom
+
+	
+	node.reparent(main_subiewport, true)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 # mastee

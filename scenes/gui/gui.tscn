@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://ct5577fkkeppu"]
+
+[ext_resource type="Texture2D" uid="uid://bc3r8wq3yuun5" path="res://assets/temp/2.png" id="1_acpcg"]
+[ext_resource type="Texture2D" uid="uid://dmrxjuar5fy2g" path="res://assets/temp/3.png" id="2_botqj"]
+[ext_resource type="Texture2D" uid="uid://ddtqi0cp1y2k3" path="res://assets/temp/4.png" id="3_seavq"]
+
+[node name="gui" type="CanvasLayer"]
+
+[node name="TextureButton" type="TextureButton" parent="."]
+anchors_preset = -1
+offset_left = 21.0
+offset_top = 19.0
+offset_right = 85.0
+offset_bottom = 83.0
+grow_horizontal = 2
+texture_normal = ExtResource("1_acpcg")
+texture_pressed = ExtResource("2_botqj")
+
+[node name="TextureButton2" type="TextureButton" parent="."]
+anchors_preset = -1
+offset_left = 109.0
+offset_top = 19.0
+offset_right = 173.0
+offset_bottom = 83.0
+grow_horizontal = 2
+texture_normal = ExtResource("3_seavq")
+texture_pressed = ExtResource("1_acpcg")

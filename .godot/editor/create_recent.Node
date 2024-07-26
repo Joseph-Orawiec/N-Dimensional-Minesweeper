@@ -1,6 +1,8 @@
+Node
+CanvasLayer
+TextureButton
 Camera2D
 TextureRect
-CanvasLayer
 Control
 Node2D
 GridContainer
@@ -11,4 +13,3 @@ Sprite2D
 CollisionShape2D
 StaticBody2D
 Area2D
-TileMap

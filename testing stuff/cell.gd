@@ -36,6 +36,8 @@ func _ready():
 func _process(delta):
 	if Input.is_action_just_pressed('m1'):
 		print('M1 CLICK RA')
+		var temp = load('res://testing stuff/unkown.png')
+		sprite_node.texture = temp
 
 # Signal stuff: mouse enter/leave
 func _on_mouse_entered():

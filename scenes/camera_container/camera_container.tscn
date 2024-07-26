@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8a5y66qbpgpm"]
+[gd_scene load_steps=2 format=3 uid="uid://b8a5y66qbpgpm"]
 
 [ext_resource type="Script" path="res://scenes/camera_container/grid_container.gd" id="1_bvydf"]
-[ext_resource type="PackedScene" uid="uid://b5ln8co377bft" path="res://testing stuff/camera_2d.tscn" id="2_dwka0"]
-[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://testing stuff/wallhaven_136m_9w_2560x_1440.tscn" id="3_v50pb"]
 
-[node name="GridContainer" type="GridContainer"]
+[node name="Node" type="Node"]
+
+[node name="CameraContainer" type="GridContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,38 +12,19 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
-columns = 2
 script = ExtResource("1_bvydf")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="." node_paths=PackedStringArray("shortcut_context")]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CameraContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-shortcut_context = NodePath("SubViewport/Wallhaven-136m9w2560x1440")
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="CameraContainer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(640, 720)
+size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
-[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport" groups=["cameras"]]
+[node name="Camera2D" type="Camera2D" parent="CameraContainer/SubViewportContainer/SubViewport" groups=["cameras"]]
 anchor_mode = 0
-
-[node name="Wallhaven-136m9w2560x1440" parent="SubViewportContainer/SubViewport" instance=ExtResource("3_v50pb")]
-
-[node name="SubViewportContainer2" type="SubViewportContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-stretch = true
-
-[node name="SubViewport2" type="SubViewport" parent="SubViewportContainer2"]
-handle_input_locally = false
-physics_object_picking = true
-size = Vector2i(640, 720)
-render_target_update_mode = 4
-
-[node name="Camera2D" parent="SubViewportContainer2/SubViewport2" groups=["cameras"] instance=ExtResource("2_dwka0")]
-script = null
