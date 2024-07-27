@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://dpxp0s2375nlw"]
+
+[node name="MineField" type="Node2D"]

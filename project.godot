@@ -15,6 +15,10 @@ run/main_scene="res://testing stuff/camera_test.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://testing stuff/icon.svg"
 
+[autoload]
+
+Assets="*res://assets/assets.gd"
+
 [display]
 
 window/size/viewport_width=1280
