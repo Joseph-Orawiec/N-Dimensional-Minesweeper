@@ -1,9 +1,9 @@
+res://scenes/mine_field/mine_field.tscn
+res://scenes/mine_field/mine_field.gd
+res://scenes/cell/cell.tscn
 res://testing stuff/wallhaven_136m_9w_2560x_1440.tscn
 res://testing stuff/cell.tscn
 res://scenes/camera/camera_2d.tscn
 res://scenes/camera_container/camera_container.tscn
 res://scenes/master_scene/master_scene.tscn
-res://scenes/mine_field/mine_field.tscn
-res://scenes/cell/cell.tscn
-res://assets/assets.gd
 res://scenes/cell/cell.gd

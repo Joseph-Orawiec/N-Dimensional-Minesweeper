@@ -23,8 +23,6 @@ func _ready():
 	var node = get_node(".")
 	node.mouse_entered.connect(_on_mouse_entered)
 	node.mouse_exited.connect(_on_mouse_exited)
-	
-	print('init')
 	set_process(false) 
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,7 +31,7 @@ func _process(delta):
 	if not is_pressed:
 		# Only do click logic if it's not flagged as well
 		if not is_flagged:
-			if Input.is_action_just_pressed("m1"):
+			if Input.is_action_pressed("m1"):
 				# switch out the color
 				cell_components["inner"].color = Assets.colors[Assets.Colors.PRESSED]
 			if Input.is_action_just_released("m1"): # Clicked
@@ -48,9 +46,13 @@ func _process(delta):
 					#click()
 					pass
 
+
+#region Mouse Detection
+# handles when the cursor enters and exits
 func _on_mouse_entered():
 	# start polling if mouse is on cell 
 	if not pause:
+		cell_components['highlight'].visible = true
 		set_process(true)
 	
 func _on_mouse_exited():
@@ -60,10 +62,10 @@ func _on_mouse_exited():
 		# only reset the sprite if it's not flagged and not already pressed 
 		if not is_pressed and not is_flagged:
 			cell_components["inner"].color = Assets.colors[Assets.Colors.UNKOWN]
+			cell_components['highlight'].visible = false
 			
 		# make sure to reset cells' sprites if stopped chording (was about to but moved mouse which means there was no release)
 		if is_chording:
 			is_chording = false
 			chord_canceled.emit(v)
-
-
+#endregion
