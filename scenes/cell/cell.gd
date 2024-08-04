@@ -13,6 +13,7 @@ var v # It's key within the cell dictionary
 var is_pressed = false
 var is_flagged = false
 var is_chording = false
+var is_highlighted = false
 
 var pause = false
 
@@ -46,13 +47,21 @@ func _process(delta):
 					#click()
 					pass
 
+# just a function dedicated to handling the highlight node
+func highlight():
+	if is_highlighted:
+		cell_components['highlight'].visible = false
+		is_highlighted = false
+	else:
+		cell_components['highlight'].visible = true
+		is_highlighted = true
 
 #region Mouse Detection
 # handles when the cursor enters and exits
 func _on_mouse_entered():
 	# start polling if mouse is on cell 
 	if not pause:
-		cell_components['highlight'].visible = true
+		highlight()
 		set_process(true)
 	
 func _on_mouse_exited():
@@ -62,7 +71,7 @@ func _on_mouse_exited():
 		# only reset the sprite if it's not flagged and not already pressed 
 		if not is_pressed and not is_flagged:
 			cell_components["inner"].color = Assets.colors[Assets.Colors.UNKOWN]
-			cell_components['highlight'].visible = false
+			highlight()
 			
 		# make sure to reset cells' sprites if stopped chording (was about to but moved mouse which means there was no release)
 		if is_chording:

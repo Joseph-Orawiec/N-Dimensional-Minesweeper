@@ -1,6 +1,26 @@
-[gd_scene load_steps=2 format=3 uid="uid://dpxp0s2375nlw"]
+[gd_scene load_steps=3 format=3 uid="uid://dpxp0s2375nlw"]
 
 [ext_resource type="Script" path="res://scenes/mine_field/mine_field.gd" id="1_5lieg"]
+[ext_resource type="PackedScene" uid="uid://m7rtx51lnyhb" path="res://scenes/cell/cell.tscn" id="2_xvuwd"]
 
 [node name="MineField" type="Node2D"]
 script = ExtResource("1_5lieg")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+offset_right = 100.0
+offset_bottom = 100.0
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 2
+
+[node name="Cell" parent="GridContainer" instance=ExtResource("2_xvuwd")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer" instance=ExtResource("2_xvuwd")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer" instance=ExtResource("2_xvuwd")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer" instance=ExtResource("2_xvuwd")]
+layout_mode = 2

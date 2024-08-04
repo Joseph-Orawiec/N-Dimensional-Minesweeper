@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://w8wixvvrkxuq"]
+
+[ext_resource type="Texture2D" uid="uid://n24kj0gyje50" path="res://testing stuff/debug paper.png" id="1_pw206"]
+[ext_resource type="Script" path="res://testing stuff/DebugPaper.gd" id="2_xvob4"]
+[ext_resource type="PackedScene" uid="uid://hjwtsl445pau" path="res://testing stuff/cell.tscn" id="3_ix4xa"]
+[ext_resource type="Texture2D" uid="uid://d0b2wxtvfq0n6" path="res://testing stuff/icon.svg" id="4_laquh"]
+[ext_resource type="Texture2D" uid="uid://bxnyesyepjelm" path="res://testing stuff/unkown.png" id="5_plt1w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yn0go"]
+size = Vector2(395, 389)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hdbpb"]
+size = Vector2(468, 426)
+
+[node name="DebugPaper" type="Sprite2D"]
+texture = ExtResource("1_pw206")
+script = ExtResource("2_xvob4")
+
+[node name="Cell" parent="." instance=ExtResource("3_ix4xa")]
+position = Vector2(-49, -536)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-959, -436)
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_yn0go")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(-1.52588e-05, 0)
+scale = Vector2(3.09375, 3.01563)
+texture = ExtResource("4_laquh")
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(275, -234)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Area2D"]
+position = Vector2(1.90139e-05, 3.05176e-05)
+scale = Vector2(3.65625, 3.32813)
+texture = ExtResource("4_laquh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_hdbpb")
+
+[node name="Unkown" type="Sprite2D" parent="."]
+position = Vector2(25, 25)
+texture = ExtResource("5_plt1w")
+
+[node name="Unkown2" type="Sprite2D" parent="."]
+position = Vector2(665, 25)
+texture = ExtResource("5_plt1w")
+
+[node name="Unkown3" type="Sprite2D" parent="."]
+position = Vector2(-615, 25)
+texture = ExtResource("5_plt1w")
+
+[node name="Unkown4" type="Sprite2D" parent="."]
+position = Vector2(-25, -25)
+texture = ExtResource("5_plt1w")

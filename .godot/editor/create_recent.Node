@@ -1,6 +1,10 @@
+Sprite2D
+Container
+Control
+PanelContainer
+GridContainer
 CenterContainer
 Label
-Container
 StaticBody2D
 CollisionShape2D
 Node
@@ -9,7 +13,3 @@ ColorRect
 Bone2D
 TileMap
 CanvasLayer
-Camera2D
-TextureRect
-Control
-Node2D

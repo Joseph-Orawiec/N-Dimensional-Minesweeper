@@ -4,18 +4,21 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_0si0s"]
 line_spacing = 0.0
-font_size = 31
+font_size = 33
 
 [node name="Cell" type="ColorRect"]
+anchors_preset = -1
 offset_right = 50.0
 offset_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 color = Color(0, 0, 0, 1)
 script = ExtResource("1_r1v4s")
 
 [node name="Highlight" type="ColorRect" parent="."]
 visible = false
 z_index = 1
-layout_mode = 0
+layout_mode = 1
 offset_right = 50.0
 offset_bottom = 50.0
 mouse_filter = 2
@@ -23,26 +26,26 @@ color = Color(0, 0.716667, 1, 1)
 
 [node name="Inner" type="ColorRect" parent="."]
 z_index = 2
-layout_mode = 0
-offset_left = 3.0
-offset_top = 3.0
-offset_right = 47.0
-offset_bottom = 47.0
+layout_mode = 1
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 48.0
+offset_bottom = 48.0
 mouse_filter = 2
 color = Color(0.780392, 0.780392, 0.780392, 1)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-layout_mode = 0
-offset_left = 3.0
-offset_top = 3.0
-offset_right = 47.0
-offset_bottom = 47.0
+visible = false
+layout_mode = 1
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 48.0
+offset_bottom = 48.0
 
 [node name="MineCount" type="Label" parent="CenterContainer"]
 visible = false
 z_index = 3
 layout_mode = 2
-text = "0"
 label_settings = SubResource("LabelSettings_0si0s")
 horizontal_alignment = 1
 vertical_alignment = 3

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://rsv85brjntrt"]
 
 [ext_resource type="Script" path="res://scenes/camera_container/grid_container.gd" id="1_3sd85"]
-[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://testing stuff/wallhaven_136m_9w_2560x_1440.tscn" id="1_u0llf"]
+[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://testing stuff/DebugPaper.tscn" id="1_u0llf"]
 [ext_resource type="PackedScene" uid="uid://b5ln8co377bft" path="res://scenes/camera/camera_2d.tscn" id="2_uu71u"]
 
 [node name="GridContainer" type="GridContainer"]

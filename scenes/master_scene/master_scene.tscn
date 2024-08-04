@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/master_scene/master_scene.gd" id="1_o1y4r"]
 [ext_resource type="Script" path="res://scenes/camera_container/grid_container.gd" id="2_fvws1"]
 [ext_resource type="Texture2D" uid="uid://bhik3mu6w1dw4" path="res://testing stuff/AHDIJHJKADJKHDA.PNG" id="2_woier"]
-[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://testing stuff/wallhaven_136m_9w_2560x_1440.tscn" id="3_lwu5e"]
+[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://testing stuff/DebugPaper.tscn" id="3_lwu5e"]
 [ext_resource type="Texture2D" uid="uid://bc3r8wq3yuun5" path="res://assets/temp/2.png" id="3_v4m7u"]
 [ext_resource type="Texture2D" uid="uid://dmrxjuar5fy2g" path="res://assets/temp/3.png" id="4_2fwwh"]
 
@@ -31,7 +31,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/CameraContainer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(2, 2)
+size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="CanvasLayer/CameraContainer/SubViewportContainer/SubViewport" groups=["cameras"]]
@@ -44,11 +44,10 @@ offset_bottom = 64.0
 texture_normal = ExtResource("3_v4m7u")
 texture_pressed = ExtResource("4_2fwwh")
 
-[node name="Wallhaven-136m9w2560x1440" parent="." instance=ExtResource("3_lwu5e")]
+[node name="DebugPaper" parent="." instance=ExtResource("3_lwu5e")]
 position = Vector2(1280, 720)
 
 [node name="TextureRect" type="TextureRect" parent="."]
-visible = false
 offset_left = -1.0
 offset_top = -1.0
 offset_right = 1281.0
