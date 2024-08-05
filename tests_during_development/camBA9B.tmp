@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://rsv85brjntrt"]
 
-[ext_resource type="Script" path="res://scenes/camera_container/grid_container.gd" id="1_3sd85"]
-[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://testing stuff/DebugPaper.tscn" id="1_u0llf"]
+[ext_resource type="Script" path="res://tests_during_development/camera_test.gd" id="1_hkno2"]
+[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://tests_during_development/DebugPaper.tscn" id="1_u0llf"]
 [ext_resource type="PackedScene" uid="uid://b5ln8co377bft" path="res://scenes/camera/camera_2d.tscn" id="2_uu71u"]
 
 [node name="GridContainer" type="GridContainer"]
@@ -13,7 +13,7 @@ grow_vertical = 2
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
 columns = 2
-script = ExtResource("1_3sd85")
+script = ExtResource("1_hkno2")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." node_paths=PackedStringArray("shortcut_context")]
 layout_mode = 2

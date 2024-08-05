@@ -1,10 +1,10 @@
 [gd_scene load_steps=8 format=3 uid="uid://w8wixvvrkxuq"]
 
-[ext_resource type="Texture2D" uid="uid://n24kj0gyje50" path="res://testing stuff/debug paper.png" id="1_pw206"]
-[ext_resource type="Script" path="res://testing stuff/DebugPaper.gd" id="2_xvob4"]
-[ext_resource type="PackedScene" uid="uid://hjwtsl445pau" path="res://testing stuff/cell.tscn" id="3_ix4xa"]
-[ext_resource type="Texture2D" uid="uid://d0b2wxtvfq0n6" path="res://testing stuff/icon.svg" id="4_laquh"]
-[ext_resource type="Texture2D" uid="uid://bxnyesyepjelm" path="res://testing stuff/unkown.png" id="5_plt1w"]
+[ext_resource type="Texture2D" uid="uid://n24kj0gyje50" path="res://tests_during_development/debug paper.png" id="1_pw206"]
+[ext_resource type="Script" path="res://tests_during_development/DebugPaper.gd" id="2_xvob4"]
+[ext_resource type="PackedScene" uid="uid://hjwtsl445pau" path="res://tests_during_development/cell.tscn" id="3_ix4xa"]
+[ext_resource type="Texture2D" uid="uid://d0b2wxtvfq0n6" path="res://tests_during_development/icon.svg" id="4_laquh"]
+[ext_resource type="Texture2D" uid="uid://bxnyesyepjelm" path="res://tests_during_development/unkown.png" id="5_plt1w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yn0go"]
 size = Vector2(395, 389)

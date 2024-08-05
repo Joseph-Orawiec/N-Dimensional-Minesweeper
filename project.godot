@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="N Dimensional Minesweeper"
-run/main_scene="res://testing stuff/camera_test.tscn"
+run/main_scene="res://tests_during_development/camera_test.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
-config/icon="res://testing stuff/icon.svg"
+config/icon="res://tests_during_development/icon.svg"
 
 [autoload]
 

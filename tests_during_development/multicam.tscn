@@ -1,0 +1,55 @@
+[gd_scene load_steps=7 format=3 uid="uid://cj60y3wspotws"]
+
+[ext_resource type="Script" path="res://tests_during_development/multicam.gd" id="1_2wu4c"]
+[ext_resource type="Script" path="res://tests_during_development/grid_container.gd" id="2_0nkkq"]
+[ext_resource type="Texture2D" uid="uid://bc3r8wq3yuun5" path="res://assets/temp/2.png" id="3_dbwck"]
+[ext_resource type="Texture2D" uid="uid://dmrxjuar5fy2g" path="res://assets/temp/3.png" id="4_1sceu"]
+[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://tests_during_development/DebugPaper.tscn" id="5_f2r8k"]
+[ext_resource type="Texture2D" uid="uid://bhik3mu6w1dw4" path="res://tests_during_development/1282x722.PNG" id="6_hwufl"]
+
+[node name="Multicam" type="Node2D"]
+script = ExtResource("1_2wu4c")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="CameraContainer" type="GridContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+script = ExtResource("2_0nkkq")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/CameraContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/CameraContainer/SubViewportContainer"]
+handle_input_locally = false
+physics_object_picking = true
+size = Vector2i(2, 2)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="CanvasLayer/CameraContainer/SubViewportContainer/SubViewport" groups=["cameras"]]
+anchor_mode = 0
+
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer"]
+visible = false
+offset_right = 64.0
+offset_bottom = 64.0
+texture_normal = ExtResource("3_dbwck")
+texture_pressed = ExtResource("4_1sceu")
+
+[node name="DebugPaper" parent="." instance=ExtResource("5_f2r8k")]
+position = Vector2(1280, 720)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1281.0
+offset_bottom = 721.0
+texture = ExtResource("6_hwufl")

@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://rsv85brjntrt"]
+
+[ext_resource type="Script" path="res://tests_during_development/camera_test.gd" id="1_hkno2"]
+[ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://tests_during_development/DebugPaper.tscn" id="1_u0llf"]
+[ext_resource type="PackedScene" uid="uid://b5ln8co377bft" path="res://scenes/camera/camera_2d.tscn" id="2_uu71u"]
+
+[node name="GridContainer" type="GridContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 2
+script = ExtResource("1_hkno2")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." node_paths=PackedStringArray("shortcut_context")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+shortcut_context = NodePath("SubViewport/Wallhaven-136m9w2560x1440")
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+physics_object_picking = true
+size = Vector2i(640, 720)
+render_target_update_mode = 4
+
+[node name="Camera2D2" parent="SubViewportContainer/SubViewport" groups=["cameras"] instance=ExtResource("2_uu71u")]
+script = null
+
+[node name="Wallhaven-136m9w2560x1440" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_u0llf")]
+
+[node name="SubViewportContainer2" type="SubViewportContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport2" type="SubViewport" parent="SubViewportContainer2"]
+handle_input_locally = false
+physics_object_picking = true
+size = Vector2i(640, 720)
+render_target_update_mode = 4
+
+[node name="Camera2D" parent="SubViewportContainer2/SubViewport2" groups=["cameras"] instance=ExtResource("2_uu71u")]
+script = null
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2

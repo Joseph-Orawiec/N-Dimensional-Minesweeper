@@ -1,24 +1,34 @@
 extends Node2D
+## manages the mine field of the game
+
+var open = 0 # cells opened
+var mines = 10 # mine count
+var field_dict = {} # game board
+var node_dict = {} # node arr (parallel dictionary)
+var cell = preload("res://scenes/cell/cell.tscn")
+var dimension # size of the mine field
+
+const adjacency_vectors = [] # useful to loop through for a lot of things
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
-	var node = preload("res://scenes/cell/cell.tscn")
-	
-	#for y in 10:
-		#for x in 10:
-			#var temp = node.instantiate()
-			#temp.position.x = x * 50
-			#temp.position.y = y * 50
-			#add_child(temp)
-			
-			
+	var a = $GridContainer
+	for i in 10:
+		for j in 10:
+			var temp = cell.instantiate()
+			a.add_child(temp)
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+	
+	
+func new_game(dimension, mines):
+	pass
+	
 	
 # I could have made an N-dimensional vector class but this is the only method i really need
 func add(u):

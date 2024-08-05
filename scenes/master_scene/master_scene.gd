@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var world = $DebugPaper
+@onready var world = $MineField
 @onready var canvas_layer = $CanvasLayer
 @onready var camera = $CanvasLayer/CameraContainer
 
