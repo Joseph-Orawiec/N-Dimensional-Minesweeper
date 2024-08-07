@@ -1,8 +1,8 @@
+GridContainer
 Sprite2D
 Container
 Control
 PanelContainer
-GridContainer
 CenterContainer
 Label
 StaticBody2D
@@ -12,4 +12,3 @@ TextureButton
 ColorRect
 Bone2D
 TileMap
-CanvasLayer

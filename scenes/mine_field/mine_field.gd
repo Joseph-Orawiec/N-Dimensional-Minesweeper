@@ -13,11 +13,7 @@ const adjacency_vectors = [] # useful to loop through for a lot of things
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var a = $GridContainer
-	for i in 10:
-		for j in 10:
-			var temp = cell.instantiate()
-			a.add_child(temp)
+	new_game([9, 9], 10)
 	pass # Replace with function body.
 
 
@@ -27,6 +23,16 @@ func _process(delta):
 	
 	
 func new_game(dimension, mines):
+	var d = len(dimension)
+	var grid_container = GridContainer.new()
+	
+	print(grid_container.theme_override_constants.h_separation)
+	
+
+	
+	
+	print_tree_pretty()
+	
 	pass
 	
 	

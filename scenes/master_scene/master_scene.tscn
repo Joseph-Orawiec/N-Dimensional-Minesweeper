@@ -37,7 +37,6 @@ render_target_update_mode = 4
 anchor_mode = 0
 
 [node name="TextureButton" type="TextureButton" parent="CanvasLayer"]
-visible = false
 offset_right = 64.0
 offset_bottom = 64.0
 texture_normal = ExtResource("3_3y80f")

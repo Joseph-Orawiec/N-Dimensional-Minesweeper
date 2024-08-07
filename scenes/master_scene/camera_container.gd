@@ -28,8 +28,6 @@ func initialize(node, n):
 		node2.get_child(0).world_2d = main_subiewport.world_2d
 		node2.get_child(0).get_child(0).position = main_camera.position + Vector2((dx/n) * ((i + 1) % n), (dy/n) * ((i + 1) / n))
 		add_child(node2)
-		
-	print_tree_pretty()
 	
 	cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
 	zoom1 = cameras[0].zoom

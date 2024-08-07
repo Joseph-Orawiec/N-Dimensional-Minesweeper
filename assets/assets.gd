@@ -8,9 +8,6 @@ var red = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print(colors[Colors.UNKOWN])
-	print(colors[Colors.PRESSED])
-	print(Color(.1, .2, .3, 1))
 	pass # Replace with function body.
 
 

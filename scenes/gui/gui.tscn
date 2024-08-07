@@ -7,7 +7,6 @@
 [node name="gui" type="CanvasLayer"]
 
 [node name="TextureButton" type="TextureButton" parent="."]
-anchors_preset = -1
 offset_left = 21.0
 offset_top = 19.0
 offset_right = 85.0
@@ -17,7 +16,6 @@ texture_normal = ExtResource("1_acpcg")
 texture_pressed = ExtResource("2_botqj")
 
 [node name="TextureButton2" type="TextureButton" parent="."]
-anchors_preset = -1
 offset_left = 109.0
 offset_top = 19.0
 offset_right = 173.0
