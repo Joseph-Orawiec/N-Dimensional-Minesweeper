@@ -15,7 +15,7 @@ const adjacency_vectors = [] # useful to loop through for a lot of things
 func _ready():
 
 	
-	new_game([3, 2], 10)
+	new_game([10, 10], 10)
 	
 	
 
@@ -34,8 +34,6 @@ func new_game(dimension, mines):
 	grid_container.columns = dimension[0]
 	grid_container.size = Vector2(dimension[0], dimension[1]) * 50
 	
-	add(dimension, 1)
-	
 	for y in dimension[1]:
 		for x in dimension[0]:
 			var temp_id = dimension.duplicate()
@@ -50,12 +48,7 @@ func new_game(dimension, mines):
 			grid_container.add_child(current_cell)
 			
 	add_child(grid_container)
-	
-	#print_tree_pretty()
-	
-	pass
-	
-	
+
 # I could have made an N-dimensional vector class but this is the only method i really need
 func add(v, u):
 	# only accept numbers and other vectors

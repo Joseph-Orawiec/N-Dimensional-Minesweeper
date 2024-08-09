@@ -3,8 +3,8 @@ extends Camera2D
 var previous_coordinates
 var is_dragging
 const pa = 1.11 # Area proportionality constant
-const zoom_min = .01
-const zoom_max = 4
+const zoom_min = .3
+const zoom_max = 9999999999999999
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
