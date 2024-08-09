@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dpxp0s2375nlw"]
+
+[ext_resource type="Script" path="res://scenes/mine_field/mine_field.gd" id="1_5lieg"]
+
+[node name="mineField" type="Node2D"]
+script = ExtResource("1_5lieg")

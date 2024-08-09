@@ -13,8 +13,11 @@ const adjacency_vectors = [] # useful to loop through for a lot of things
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	new_game([9, 9], 10)
-	pass # Replace with function body.
+
+	
+	new_game([3, 2], 10)
+	
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,31 +29,48 @@ func new_game(dimension, mines):
 	var d = len(dimension)
 	var grid_container = GridContainer.new()
 	
-	print(grid_container.theme_override_constants.h_separation)
+	grid_container.add_theme_constant_override('h_separation', 0)
+	grid_container.add_theme_constant_override('v_separation', 0)
+	grid_container.columns = dimension[0]
+	grid_container.size = Vector2(dimension[0], dimension[1]) * 50
 	
-
+	add(dimension, 1)
 	
+	for y in dimension[1]:
+		for x in dimension[0]:
+			var temp_id = dimension.duplicate()
+			temp_id[0] = x
+			temp_id[1] = y
+			
+			field_dict[temp_id] = 0
+			node_dict[temp_id] = cell.instantiate()
+			
+			var current_cell = node_dict[temp_id]
+			
+			grid_container.add_child(current_cell)
+			
+	add_child(grid_container)
 	
-	print_tree_pretty()
+	#print_tree_pretty()
 	
 	pass
 	
 	
 # I could have made an N-dimensional vector class but this is the only method i really need
-func add(u):
+func add(v, u):
 	# only accept numbers and other vectors
 	assert((u is Array) or (u is int) or (u is float))
 	
 	var arr = []
 	match typeof(u):
 		TYPE_FLOAT, TYPE_INT:
-			for i in range(len(self.v)):
-				arr.append(self.v[i] + u)
+			for i in range(len(v)):
+				arr.append(v[i] + u)
 			
 		TYPE_ARRAY:
-			assert(len(self.v) == len(u.v))
+			assert(len(v) == len(u.v))
 			
-			for i in range(len(self.v)):
-				arr.append(self.v[i] + u.v[i])
+			for i in range(len(v)):
+				arr.append(v[i] + u.v[i])
 			
 	return arr
