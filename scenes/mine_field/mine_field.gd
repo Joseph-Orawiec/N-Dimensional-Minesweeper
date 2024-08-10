@@ -8,7 +8,8 @@ var node_dict: Dictionary = {} # node arr (parallel dictionary)
 var cell: PackedScene = preload("res://scenes/cell/cell.tscn")
 var dimension: Array[int] # size of the mine field
 
-const adjacency_vectors = [] # useful to loop through for a lot of things
+var adjacency_vectors = []
+#var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vectors which are useful to loop through for a lot of things
 
 
 # Called when the node enters the scene tree for the first time.
@@ -26,7 +27,40 @@ func _process(delta):
 	
 	
 func new_game(dimension: Array[int], mines: int):
-	var d: int = len(dimension)
+	var d: int = len(dimension) # Nth dimension
+	
+	# Setup binary counter
+	var arr: Array[int] = []
+	arr.resize(d)
+	arr.fill(-1)
+	
+	
+	var isDone: bool = false
+	# Start counting
+	while !isDone:
+		adjacency_vectors.append(arr.duplicate())
+		arr[0] += 1
+		
+		# check if should rollover
+		var index: int = 0 #index to check for rollover
+		while arr[index] == 2: # only continue rolling over if == 2
+			if index == len(arr) - 1: #if about to rollover last base 3 bit, then it's finished
+				isDone = true
+				break
+			
+			arr[index] = -1
+			arr[index + 1] += 1
+			
+			# about to rollover last index
+			
+				
+			index += 1 #finally, increase
+	# Remove the [0, 0, ... 0] case as that's just itself and happens to always be in the middle of the rray
+	adjacency_vectors.remove_at(len(adjacency_vectors)/2) 
+	
+	
+	
+	
 	var grid_container = GridContainer.new()
 	
 	grid_container.add_theme_constant_override('h_separation', 0)
