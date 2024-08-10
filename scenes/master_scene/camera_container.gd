@@ -1,10 +1,10 @@
 extends GridContainer
 
-var previous_coordinates
-var is_dragging
-const pa = 1.11 # Area proportionality constant
-const zoom_min = pow(1.11, -22/2) #roughly .3
-const zoom_max = pow(1.11, 21/2) #roughly 2.9915
+var previous_coordinates: Vector2
+var is_dragging: bool
+const pa: float = 1.11 # Area proportionality constant
+const zoom_min: float = pow(1.11, -22/2) #roughly .3
+const zoom_max: float = pow(1.11, 21/2) #roughly 2.9915
 
 var cameras #placeholder to be initialized later
 var zoom1 #placeholder to be initialized later
@@ -19,8 +19,8 @@ func _ready():
 	
 
 func initialize(node, n):
-	const dx = 1280
-	const dy = 720
+	const dx: int = 1280
+	const dy: int = 720
 	columns = n
 	
 	for i in (n * n) - 1:
@@ -56,13 +56,13 @@ func _input(event):
 	# i need it in terms of the coordinate space of the subviewport world and wrt to the top left cameras position
 	# so i need to scale the coordinates by the zoom facter, and then add to get it wrt to the camera
 	# have a desmos graph, this shows the mouse_position function https://www.desmos.com/calculator/dc7cfi4urn
-	var local_mouse_position = get_global_mouse_position() * 1/zoom1 + cameras[0].position
-	var mouse_position = cameras[0].position + vector_mod(local_mouse_position - cameras[0].position, cameras[0].get_viewport_rect().size * 1/zoom1)
+	var local_mouse_position: Vector2 = get_global_mouse_position() * 1/zoom1 + cameras[0].position
+	var mouse_position: Vector2 = cameras[0].position + vector_mod(local_mouse_position - cameras[0].position, cameras[0].get_viewport_rect().size * 1/zoom1)
 	
 	# vector from the cursor to the corner of the camera, which happens to be just the mouse position
 	# because all the math is being done with respect to a camera located at 0, 0
-	var d = cameras[0].position - mouse_position
-	var zoom2 = 1 # to be determined later
+	var d: Vector2 = cameras[0].position - mouse_position
+	var zoom2: Vector2 = Vector2.ONE # to be determined later
 	
 	if event.is_action_pressed('zoom_in'):
 		
@@ -73,8 +73,8 @@ func _input(event):
 		zoom2 = zoom2.clamp(Vector2(1, 1) * zoom_min, Vector2(1, 1) * zoom_max)
 		
 		# using the formula i derived
-		var position2 = (mouse_position + d * (zoom1 / zoom2))
-		var position_delta = position2 - cameras[0].position
+		var position2: Vector2 = (mouse_position + d * (zoom1 / zoom2))
+		var position_delta: Vector2 = position2 - cameras[0].position
 		
 		# set all values
 		zoom1 = zoom2
@@ -86,11 +86,11 @@ func _input(event):
 		# take the reciprocal instead
 		zoom2 = (zoom1.x / sqrt(pa)) * Vector2(1, 1)
 		zoom2 = zoom2.clamp(Vector2(1, 1) * zoom_min, Vector2(1, 1) * zoom_max)
-		var position2 = mouse_position + d * (zoom1 / zoom2)
+		var position2: Vector2 = mouse_position + d * (zoom1 / zoom2)
 		
 		
 		# solve for position_delta, this is the position change that's required for all viewports
-		var position_delta = position2 - cameras[0].position
+		var position_delta: Vector2 = position2 - cameras[0].position
 		
 		# set all values
 		zoom1 = zoom2

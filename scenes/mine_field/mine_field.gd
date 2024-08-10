@@ -1,12 +1,12 @@
 extends Node2D
 ## manages the mine field of the game
 
-var open = 0 # cells opened
-var mines = 10 # mine count
-var field_dict = {} # game board
-var node_dict = {} # node arr (parallel dictionary)
-var cell = preload("res://scenes/cell/cell.tscn")
-var dimension # size of the mine field
+var open: int = 0 # cells opened
+var mines: int = 10 # mine count
+var field_dict: Dictionary = {} # game board
+var node_dict: Dictionary = {} # node arr (parallel dictionary)
+var cell: PackedScene = preload("res://scenes/cell/cell.tscn")
+var dimension: Array[int] # size of the mine field
 
 const adjacency_vectors = [] # useful to loop through for a lot of things
 
@@ -25,8 +25,8 @@ func _process(delta):
 	pass
 	
 	
-func new_game(dimension, mines):
-	var d = len(dimension)
+func new_game(dimension: Array[int], mines: int):
+	var d: int = len(dimension)
 	var grid_container = GridContainer.new()
 	
 	grid_container.add_theme_constant_override('h_separation', 0)
@@ -36,7 +36,7 @@ func new_game(dimension, mines):
 	
 	for y in dimension[1]:
 		for x in dimension[0]:
-			var temp_id = dimension.duplicate()
+			var temp_id: Array[int] = dimension.duplicate()
 			temp_id[0] = x
 			temp_id[1] = y
 			
@@ -50,7 +50,7 @@ func new_game(dimension, mines):
 	add_child(grid_container)
 
 # I could have made an N-dimensional vector class but this is the only method i really need
-func add(v, u):
+func add(v: Array[int], u):
 	# only accept numbers and other vectors
 	assert((u is Array) or (u is int) or (u is float))
 	
