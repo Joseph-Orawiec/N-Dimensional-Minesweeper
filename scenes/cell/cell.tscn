@@ -37,8 +37,8 @@ color = Color(0.780392, 0.780392, 0.780392, 1)
 layout_mode = 1
 offset_left = 2.0
 offset_top = 2.0
-offset_right = 50.0
-offset_bottom = 50.0
+offset_right = 48.0
+offset_bottom = 48.0
 
 [node name="MineCount" type="Label" parent="CenterContainer"]
 z_index = 3

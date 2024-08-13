@@ -8,7 +8,7 @@ signal chord_canceled
 signal flagged
 signal clicked(id)
 
-var positional_id #not used by this script but the mine_field script
+var pid #(positional id) not used by this script but the mine_field script 
 var id # What kind of cell it is (number or mine)
 var v # It's key within the cell dictionary
 var is_pressed = false
@@ -46,6 +46,7 @@ func _process(delta):
 						
 					# reveal cell
 					#click()
+					print(pid)
 					pass
 
 # just a function dedicated to handling the highlight node

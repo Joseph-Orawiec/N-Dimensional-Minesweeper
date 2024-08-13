@@ -14,7 +14,7 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
-	new_game([10, 10, 2, 0], 10)
+	new_game([4, 6, 2, 2], 10)
 	
 	
 
@@ -24,55 +24,94 @@ func _process(delta):
 	pass
 	
 	
-func new_game(dimension: Array[int], mines: int):
-	var d: int = len(dimension) # Nth dimension
+func new_game(dimensions: Array[int], mines: int):
+	generate_adjacency_vectors(len(dimensions))
 	
-	generate_adjacency_vectors(d)
+	var main_grid_container = GridContainer.new()
+	add_child(main_grid_container) # on 1st dimension construction the .reparent wont work as it doesn't have a parent
+	main_grid_container.size = Vector2.ONE * 50
+	main_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+	main_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
 	
-	var grid_container = GridContainer.new()
+	#main_grid_container.add_theme_constant_override('h_separation', 0)
+	#main_grid_container.add_theme_constant_override('v_separation', 0)
+	#main_grid_container.columns = dimension[0]
+	#main_grid_container.size = Vector2(dimension[0], dimension[1]) * 50
+	#main_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+	#main_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
 	
-	grid_container.add_theme_constant_override('h_separation', 0)
-	grid_container.add_theme_constant_override('v_separation', 0)
-	grid_container.columns = dimension[0]
-	grid_container.size = Vector2(dimension[0], dimension[1]) * 50
-	grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
-	grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
+	# TODO, connect signals 
+	var node_0 = cell.instantiate() #node naught
+	var id: Array[int] = []
+	id.resize(len(dimensions))
+	id.fill(0)
+	node_0.pid = id.duplicate()
+	main_grid_container.add_child(node_0)
 	
-	for y in dimension[1]:
-		for x in dimension[0]:
-			var temp_id: Array[int] = dimension.duplicate()
-			temp_id[0] = x
-			temp_id[1] = y
+	for dimension in range(1, len(dimensions) + 1): #dimension being current dimension worked on
+		var dimension_index: int = dimension - 1
+		var d: int = dimensions[dimension_index] # dimension size
+		
+		var new_grid_container = GridContainer.new()
+		new_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+		new_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
+		main_grid_container.reparent(new_grid_container) # 2ond Dimension+ node will already have a parent
+		if (dimension % 2 == 1):
+			new_grid_container.columns = d
+			# only start to add margins on the 3'rd and up dimension, then progressively get bigger
+			new_grid_container.add_theme_constant_override('h_separation', ((dimension - 1) / 2) * 2)
+		else:
+			new_grid_container.add_theme_constant_override('v_separation', ((dimension_index) / 2) * 2)
+		
+		# calculating size
+		var h_cells = 1
+		var h_margins = 0
+		for j in range(0, dimension, 2):
+			h_cells *= dimensions[j]
+			h_margins += (dimensions[j] - 1) * (j / 2) * 2
 			
-			field_dict[temp_id] = 0
-			node_dict[temp_id] = cell.instantiate()
+		var v_cells = 1
+		var v_margins = 0
+		for j in range(1, dimension, 2):
+			v_cells *= dimensions[j]
+			v_margins += (dimensions[j] - 1) * ((j - 1) / 2) * 2
+		
+		new_grid_container.size = Vector2(h_cells, v_cells) * 50 + Vector2(h_margins, v_margins)
+		
+		if(dimension == 3):
+			print()
+		
+		# It's always the case the first cell/row/3d layer/ ... / is always done
+		# so we only need to duplicate it dimension size - 1 times to achieve dimension size
+		
+		for i in range(1, d):
+			var duped_gc = main_grid_container.duplicate()
+			# change all of the inner cell's id's to reflect a different position
+			var unvisited = duped_gc.get_children()
+			while len(unvisited) != 0:
+				var current = unvisited.pop_front()
+				if current is ColorRect:
+					# because .duplicate doesn't hold instance fields, i need to keep track of how many cells have been visited
+					# versus just doing current.pid[dimension_index] = i 
+					var index: int = 0
+					id[index] += 1
+					
+					# check if on new row/layer/etc, very similar to the adj_vector generating function
+					while id[index] == dimensions[index]:
+						id[index] = 0
+						index += 1
+						id[index] += 1
+					
+					current.pid = id.duplicate()
+				else:
+					unvisited.append_array(current.get_children())
+				
 			
-			var current_cell = node_dict[temp_id]
-			
-			grid_container.add_child(current_cell)
-			
-	add_child(grid_container)
-	
-	# start repeating
-	var level = 3
-	var margin: int = level - 1
-	
-	var new_grid_container = GridContainer.new()
-	grid_container.reparent(new_grid_container)
-	
-	new_grid_container.add_theme_constant_override('h_separation', margin)
-	new_grid_container.add_theme_constant_override('v_separation', margin)
-	new_grid_container.columns = dimension[level - 1]
-	new_grid_container.size = Vector2(1002, 500)
-	new_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
-	new_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
-	
-	var gc2 = grid_container.duplicate()
-	new_grid_container.add_child(gc2)
-	
-	add_child(new_grid_container)
-	
-	
+			new_grid_container.add_child(duped_gc)
+		
+		
+		main_grid_container = new_grid_container
+		add_child(main_grid_container)
 
 # handles the logic of generating adjacency vectors for any dimension
 func generate_adjacency_vectors(dimension: int):
