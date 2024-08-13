@@ -1,4 +1,5 @@
 GridContainer
+GridMap
 Control
 Sprite2D
 Container
@@ -11,4 +12,3 @@ Node
 TextureButton
 ColorRect
 Bone2D
-TileMap

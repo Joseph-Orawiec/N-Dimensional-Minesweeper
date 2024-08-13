@@ -13,9 +13,8 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-
 	
-	new_game([10, 10], 10)
+	new_game([10, 10, 2, 0], 10)
 	
 	
 
@@ -29,7 +28,6 @@ func new_game(dimension: Array[int], mines: int):
 	var d: int = len(dimension) # Nth dimension
 	
 	generate_adjacency_vectors(d)
-	print(adjacency_vector_dictionary)
 	
 	var grid_container = GridContainer.new()
 	
@@ -37,6 +35,8 @@ func new_game(dimension: Array[int], mines: int):
 	grid_container.add_theme_constant_override('v_separation', 0)
 	grid_container.columns = dimension[0]
 	grid_container.size = Vector2(dimension[0], dimension[1]) * 50
+	grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+	grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
 	
 	for y in dimension[1]:
 		for x in dimension[0]:
@@ -45,13 +45,34 @@ func new_game(dimension: Array[int], mines: int):
 			temp_id[1] = y
 			
 			field_dict[temp_id] = 0
-			node_dict[temp_id] = cell.duplicate()
+			node_dict[temp_id] = cell.instantiate()
 			
 			var current_cell = node_dict[temp_id]
 			
 			grid_container.add_child(current_cell)
 			
 	add_child(grid_container)
+	
+	# start repeating
+	var level = 3
+	var margin: int = level - 1
+	
+	var new_grid_container = GridContainer.new()
+	grid_container.reparent(new_grid_container)
+	
+	new_grid_container.add_theme_constant_override('h_separation', margin)
+	new_grid_container.add_theme_constant_override('v_separation', margin)
+	new_grid_container.columns = dimension[level - 1]
+	new_grid_container.size = Vector2(1002, 500)
+	new_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+	new_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
+	
+	var gc2 = grid_container.duplicate()
+	new_grid_container.add_child(gc2)
+	
+	add_child(new_grid_container)
+	
+	
 
 # handles the logic of generating adjacency vectors for any dimension
 func generate_adjacency_vectors(dimension: int):
