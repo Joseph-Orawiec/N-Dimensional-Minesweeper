@@ -1,11 +1,14 @@
 extends Node2D
 ## manages the mine field of the game
 
+var margin = 2
+const Cell: PackedScene = preload("res://scenes/cell/cell.tscn")
+
 var open: int = 0 # cells opened
 var mines: int = 10 # mine count
 var field_dict: Dictionary = {} # game board
 var node_dict: Dictionary = {} # node arr (parallel dictionary)
-var cell: PackedScene = preload("res://scenes/cell/cell.tscn")
+
 var dimension: Array[int] # size of the mine field
 
 var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vectors which are useful to loop through for a lot of things
@@ -14,7 +17,7 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
-	new_game([4, 6, 2, 2], 10)
+	new_game([2, 2, 2, 2, 2, 2, 2, 2, 2, 2], 10)
 	
 	
 
@@ -41,7 +44,7 @@ func new_game(dimensions: Array[int], mines: int):
 	#main_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
 	
 	# TODO, connect signals 
-	var node_0 = cell.instantiate() #node naught
+	var node_0 = Cell.instantiate() #node naught
 	var id: Array[int] = []
 	id.resize(len(dimensions))
 	id.fill(0)
@@ -59,32 +62,21 @@ func new_game(dimensions: Array[int], mines: int):
 		if (dimension % 2 == 1):
 			new_grid_container.columns = d
 			# only start to add margins on the 3'rd and up dimension, then progressively get bigger
-			new_grid_container.add_theme_constant_override('h_separation', ((dimension - 1) / 2) * 2)
-		else:
-			new_grid_container.add_theme_constant_override('v_separation', ((dimension_index) / 2) * 2)
-		
-		# calculating size
-		var h_cells = 1
-		var h_margins = 0
-		for j in range(0, dimension, 2):
-			h_cells *= dimensions[j]
-			h_margins += (dimensions[j] - 1) * (j / 2) * 2
+			new_grid_container.add_theme_constant_override('h_separation', ((dimension - 1) / 2) * margin)
 			
-		var v_cells = 1
-		var v_margins = 0
-		for j in range(1, dimension, 2):
-			v_cells *= dimensions[j]
-			v_margins += (dimensions[j] - 1) * ((j - 1) / 2) * 2
-		
-		new_grid_container.size = Vector2(h_cells, v_cells) * 50 + Vector2(h_margins, v_margins)
-		
-		if(dimension == 3):
-			print()
+			# to calculate size, just multiply the old container's size by how many times it'll be copied, and add the margins of current container
+			# this will factor in the margins being duplicated as well, compared to previous solution
+			new_grid_container.size = main_grid_container.size * Vector2(d, 1) + Vector2(((dimension - 1) / 2) * margin, 0)
+		else:
+			new_grid_container.add_theme_constant_override('v_separation', ((dimension_index) / 2) * margin)
+			
+			new_grid_container.size = main_grid_container.size * Vector2(1, d) + Vector2(0, ((dimension_index) / 2) * margin)
 		
 		# It's always the case the first cell/row/3d layer/ ... / is always done
 		# so we only need to duplicate it dimension size - 1 times to achieve dimension size
 		
 		for i in range(1, d):
+			print(dimension, ' ', float(i)/d)
 			var duped_gc = main_grid_container.duplicate()
 			# change all of the inner cell's id's to reflect a different position
 			var unvisited = duped_gc.get_children()

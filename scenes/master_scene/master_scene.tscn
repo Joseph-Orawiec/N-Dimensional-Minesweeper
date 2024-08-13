@@ -30,7 +30,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/CameraContainer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(1280, 720)
+size = Vector2i(2, 2)
 render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="CanvasLayer/CameraContainer/SubViewportContainer/SubViewport" groups=["cameras"]]

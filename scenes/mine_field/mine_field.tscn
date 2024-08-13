@@ -10,6 +10,7 @@ script = ExtResource("1_5lieg")
 [node name="Camera2D" parent="." instance=ExtResource("2_xfpd3")]
 
 [node name="GridContainer" type="GridContainer" parent="."]
+visible = false
 offset_right = 402.0
 offset_bottom = 300.0
 size_flags_horizontal = 3
