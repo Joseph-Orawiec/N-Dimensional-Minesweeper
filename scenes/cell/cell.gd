@@ -9,8 +9,9 @@ signal flagged
 signal clicked(id)
 signal toggle_highlighted
 
-enum Colors {UNKOWN, PRESSED, OPENED}
-var  colors = {Colors.UNKOWN: Color.hex(0xC7C7C7FF), Colors.PRESSED: Color.hex(0x808080FF), Colors.OPENED: Color.hex(0xFFFFFFFF), } #basically a constant
+enum Colors {UNKOWN, PRESSED, OPENED, FLAGGED_WRONG, BOMB}
+var  colors = {Colors.UNKOWN: Color.hex(0xC6C6C6FF), Colors.PRESSED: Color.hex(0x808080FF), Colors.OPENED: Color.hex(0xFFFFFFFF),
+ Colors.FLAGGED_WRONG: Color.hex(0xffa0a0FF), Colors.BOMB: Color.RED, } #basically a constant
 
 var id: int = -2 # What kind of cell it is (number or mine)
 var fid: int #flagged id, id - surrounding flags
@@ -22,7 +23,8 @@ var is_highlighted: bool = false
 
 var pause = false
 
-@onready var cell_components = {"inner": $Inner, "highlight": $Highlight, "text container": $TextContainer, "text": $TextContainer/Text, }
+@onready var cell_components = {"inner": $Inner, "highlight": $Highlight, "text container": $TextContainer, "text": $TextContainer/Text, 
+	"flag": $Flag, "bomb": $Bomb, }
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -49,6 +51,24 @@ func _process(delta):
 				
 				# reveal cell
 				click()
+				
+			# M2 flag cell
+			if Input.is_action_just_pressed("m2"):
+				if not is_flagged:
+					flagged.emit(pid, true) # emit signal to increment/decrement counter
+					cell_components["flag"].visible = true
+				else:
+					flagged.emit(pid, false)
+					cell_components["flag"].visible = false
+				is_flagged = not is_flagged
+	else:
+		# check for chording logic
+		if Input.is_action_pressed("chord"):
+			chord_pressed.emit(pid)
+			is_chording = true
+		if Input.is_action_just_released("chord"): # execute chord
+			is_chording = false
+			chord_released.emit(pid)
 
 # player click
 func click(is_emitting:bool = true):
@@ -68,6 +88,29 @@ func click(is_emitting:bool = true):
 			
 			if id == -1:
 				set_process(false)
+
+# this function is for when a neighboring cell is getting chorded, this cell needs to change asset
+func chord_press():
+	# Only do logic if not pressed and not flagged
+	if not is_pressed and not is_flagged:
+		# show about to be clicked cell sprite
+		cell_components["inner"].color = colors[Colors.PRESSED]
+
+# execute chording logic when neighboring cell was chorded
+func chord_release(flags_match_id):
+	# Only do logic if not pressed and not flagged, same conditions as the initial chord_press
+	if not is_pressed and not is_flagged:
+		if flags_match_id:
+			# and only if the requirements to chord were met
+			click();
+		else:
+			# reset texture
+			cell_components["inner"].color = colors[Colors.UNKOWN]
+
+# when a neighboring cell cancelled it's chord, reset sprite
+func chord_cancel():
+	if not is_pressed and not is_flagged:
+		cell_components["inner"].color = colors[Colors.UNKOWN]
 
 # just a function dedicated to handling the highlight node
 func toggle_highlight():

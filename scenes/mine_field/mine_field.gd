@@ -20,8 +20,8 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	game_dimensions = [4, 4, 4, 4]
-	new_game(game_dimensions, 10)
+	game_dimensions = [9, 9, 9]
+	new_game(game_dimensions, 100)
 	
 
 
@@ -145,17 +145,18 @@ func _on_initialize(v):
 		
 	for i in node_dict:
 		node_dict[i].id = field_dict[i]
+		node_dict[i].fid = field_dict[i]
 
-func _on_zero_chain(v0):
-	var nodes_checked = [v0] # keep track of opened nodes using their vector key
-	var node_border = [v0] # keep track of what nodes are at the border in order to expand on
-	var is_processing = true # true to first enter the loop 
+func _on_zero_chain(v0: Array[int]):
+	var nodes_checked: Array[Array] = [v0] # keep track of opened nodes using their vector key
+	var node_border: Array[Array] = [v0] # keep track of what nodes are at the border in order to expand on
+	var is_processing: bool = true # true to first enter the loop 
 	
 	while is_processing:
 		var new_border = [] # generate the new node border
 		for v in node_border:
 			for u in adjacency_vector_dictionary[d]:
-				var current_node = v + u
+				var current_node: Array[int] = add(v, u)
 				# only add if it's not on the list
 				if not (current_node in new_border or current_node in nodes_checked):
 					new_border.append(current_node)
@@ -164,30 +165,65 @@ func _on_zero_chain(v0):
 		is_processing = false # assume false
 		
 		# replace node_border with only 0 cells (to later expand on)
-		var culled_new_border = []
+		var culled_new_border: Array[Array] = []
 		for v in new_border:
-			nodes_checked.append(v)
-			if field_dict[v] == 0: # if atleast one cell is 0
-				is_processing = true
-				# add to the culled list, erasing from other array would require to loop by index and subtract 1 for every removal (as to not skip)
-				culled_new_border.append(v) # numbers (and mines) will stop the opening
-				
-			# reveal cell if it's not a mine
-			if field_dict[v] != -1:
-				node_dict[v].click(false)
+			if node_dict.get(v, null) != null: # only check if the node exists first
+				nodes_checked.append(v)
+				if field_dict[v] == 0: # if atleast one cell is 0
+					is_processing = true
+					# add to the culled list, erasing from other array would require to loop by index and subtract 1 for every removal (as to not skip)
+					culled_new_border.append(v) # numbers (and mines) will stop the opening
+					
+				# reveal cell if it's not a mine
+				if field_dict[v] != -1:
+					node_dict[v].click(false)
 		
 		# replace node_border variable (and no more stack overflows)
 		node_border = culled_new_border
 
 func _on_cell_clicked():
 	pass
-func _on_cell_flagged():
-	pass
-func _on_chord_released():
-	pass
-func _on_chord_canceled():
-	pass
-func _on_chord_pressed():
+
+func _on_cell_flagged(v :Array[int], flagged: bool):
+	for u in adjacency_vector_dictionary[d]:
+		var current_node: Array[int] = add(v, u)
+		if flagged:
+			node_dict[current_node].fid += 1 
+		else:
+			node_dict[current_node].fid -= 1 
+	
+# Change sprites of adjacent cells
+func _on_chord_pressed(v):
+	for u in adjacency_vector_dictionary[d]:
+		var current_node = node_dict.get(add(v, u), null)
+		
+		if current_node != null: # if adjacent cell exists, change sprite
+			current_node.chord_press()
+			
+# Execute chord logic
+func _on_chord_released(v):
+	# first we need to make sure the amount of flags = cell number
+	var sum_of_flags = 0
+	for u in adjacency_vector_dictionary[d]:
+		var current_node = node_dict.get(add(v, u), null)
+		if current_node != null: # if exists
+			if current_node.is_flagged:
+				sum_of_flags += 1
+				
+	# if so, reveal every adjacent cell
+	if node_dict[v].id == sum_of_flags:
+		for u in adjacency_vector_dictionary[d]:
+			var current_node = node_dict.get(add(v, u), null)
+			if current_node != null: # if exists
+				current_node.chord_release(true)
+	else: # don't actually do anything instead
+		for u in adjacency_vector_dictionary[d]:
+			var current_node = node_dict.get(add(v, u), null)
+			if current_node != null: # if exists
+				current_node.chord_release(false)
+			
+# reset the sprites of adjacent cell if mouse moved off
+func _on_chord_canceled(v):
 	pass
 
 func _on_toggle_highlighted(v):
@@ -202,6 +238,11 @@ func _on_toggle_highlighted(v):
 func connect_node_signals(n):
 	n.toggle_highlighted.connect(_on_toggle_highlighted)
 	n.initialize.connect(_on_initialize)
+	n.zero_chain.connect(_on_zero_chain)
+	n.chord_pressed.connect(_on_chord_pressed)
+	n.chord_released.connect(_on_chord_released)
+	n.chord_canceled.connect(_on_chord_canceled)
+	n.flagged.connect(_on_cell_flagged)
 
 # handles the logic of generating adjacency vectors for any dimension
 func generate_adjacency_vectors(dimension: int):
@@ -237,17 +278,17 @@ func generate_adjacency_vectors(dimension: int):
 			# move onto checking the next bit to the right
 			index += 1 #finally, increase
 			
-	# Remove the [0, 0, ... 0] case as that's just itself and happens to always be in the middle of the rray
+	# Remove the [0, 0, ... 0] case as that's just itself and happens to always be in the middle of the array
 	adjacency_vectors.remove_at(len(adjacency_vectors)/2) 
 	
 	adjacency_vector_dictionary[dimension] = adjacency_vectors
 
 # I could have made an N-dimensional vector class but this is the only method i really need
-func add(v: Array[int], u):
+func add(v: Array[int], u) -> Array[int]:
 	# only accept numbers and other vectors
 	assert((u is Array) or (u is int) or (u is float))
 	
-	var arr = []
+	var arr: Array[int] = []
 	match typeof(u):
 		TYPE_FLOAT, TYPE_INT:
 			for i in range(len(v)):
@@ -259,4 +300,4 @@ func add(v: Array[int], u):
 			for i in range(len(v)):
 				arr.append(v[i] + u[i])
 			
-	return arr
+	return arr as Array[int]
