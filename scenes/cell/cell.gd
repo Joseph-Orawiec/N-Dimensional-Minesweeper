@@ -24,7 +24,7 @@ var is_highlighted: bool = false
 var pause = false
 
 @onready var cell_components = {"inner": $Inner, "highlight": $Highlight, "text container": $TextContainer, "text": $TextContainer/Text, 
-	"flag": $Flag, "bomb": $Bomb, }
+	"flag": $Flag, "bomb": $Bomb}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -48,19 +48,18 @@ func _process(delta):
 				# as the first click is never a mine
 				if id == -2:
 					initialize.emit(pid)
-				
 				# reveal cell
 				click()
 				
 			# M2 flag cell
-			if Input.is_action_just_pressed("m2"):
-				if not is_flagged:
-					flagged.emit(pid, true) # emit signal to increment/decrement counter
-					cell_components["flag"].visible = true
-				else:
-					flagged.emit(pid, false)
-					cell_components["flag"].visible = false
-				is_flagged = not is_flagged
+		if Input.is_action_just_pressed("m2"):
+			if not is_flagged:
+				flagged.emit(pid, true) # emit signal to increment/decrement counter
+				cell_components["flag"].visible = true
+			else:
+				flagged.emit(pid, false)
+				cell_components["flag"].visible = false
+			is_flagged = not is_flagged
 	else:
 		# check for chording logic
 		if Input.is_action_pressed("chord"):
@@ -70,15 +69,41 @@ func _process(delta):
 			is_chording = false
 			chord_released.emit(pid)
 
+#region Winning and Losing
+# special flag function for when a game is won, flag all other mines
+func won():
+	pause = true
+	set_process(false)
+	if id == -1 and not is_flagged:
+		flagged.emit(true)
+		cell_components["flag"].visible = true
+		
+func lost():
+	pause = true
+	set_process(false)
+	if id == -1 and not is_pressed: # reveal mine
+		cell_components["bomb"].visible = true
+		cell_components["inner"].color = colors[Colors.OPENED]
+	
+	if id != -1 and is_flagged: # 
+		cell_components["flag"].visible = true
+		cell_components["inner"].color = colors[Colors.FLAGGED_WRONG]
+#endregion
+
 # player click
 func click(is_emitting:bool = true):
 	# Whenever player clicks a mine or a cell is clicked indirectly via chording or 0 chain
 	if not is_flagged:
 		if not is_pressed:
 			is_pressed = true
-			cell_components["text container"].visible = true
-			cell_components["text"].text = str(id)
-			cell_components["inner"].color = colors[Colors.OPENED]
+			if id == -1:
+				# special bomb case
+				cell_components["bomb"].visible = true
+				cell_components["inner"].color = colors[Colors.BOMB]
+			else:
+				cell_components["text container"].visible = true
+				cell_components["text"].text = str(id)
+				cell_components["inner"].color = colors[Colors.OPENED]
 			
 			# prevent trying to zero chain recursively as previously implemented
 			if id == 0 and is_emitting:
@@ -89,6 +114,7 @@ func click(is_emitting:bool = true):
 			if id == -1:
 				set_process(false)
 
+#region Chording logic
 # this function is for when a neighboring cell is getting chorded, this cell needs to change asset
 func chord_press():
 	# Only do logic if not pressed and not flagged
@@ -111,6 +137,7 @@ func chord_release(flags_match_id):
 func chord_cancel():
 	if not is_pressed and not is_flagged:
 		cell_components["inner"].color = colors[Colors.UNKOWN]
+#endregion
 
 # just a function dedicated to handling the highlight node
 func toggle_highlight():
@@ -124,23 +151,23 @@ func toggle_highlight():
 #region Mouse Detection
 # handles when the cursor enters and exits
 func _on_mouse_entered():
+	# highlight should continue regardless
+	toggle_highlight()
+	toggle_highlighted.emit(pid)
 	# start polling if mouse is on cell 
 	if not pause:
-		toggle_highlight()
-		toggle_highlighted.emit(pid)
 		set_process(true)
 	
 func _on_mouse_exited():
+	# highlight should continue regardless
+	toggle_highlight()
+	toggle_highlighted.emit(pid)
 	if not pause:
 		# Stop polling if mouse isn't on cell
 		set_process(false)
 		# only reset the sprite if it's not flagged and not already pressed 
 		if not is_pressed and not is_flagged:
 			cell_components["inner"].color = colors[Colors.UNKOWN]
-		
-		# should do whether is pressed or not
-		toggle_highlight()
-		toggle_highlighted.emit(pid)
 			
 		# make sure to reset cells' sprites if stopped chording (was about to but moved mouse which means there was no release)
 		if is_chording:

@@ -2,9 +2,13 @@
 
 [ext_resource type="Script" path="res://scenes/master_scene/master_scene.gd" id="1_o1y4r"]
 [ext_resource type="Script" path="res://scenes/master_scene/camera_container.gd" id="2_umoqm"]
-[ext_resource type="Texture2D" uid="uid://bc3r8wq3yuun5" path="res://assets/temp/2.png" id="3_3y80f"]
-[ext_resource type="Texture2D" uid="uid://dmrxjuar5fy2g" path="res://assets/temp/3.png" id="4_b33j7"]
 [ext_resource type="PackedScene" uid="uid://dpxp0s2375nlw" path="res://scenes/mine_field/mine_field.tscn" id="5_y18ea"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tc5en"]
+load_path = "res://.godot/imported/2.png-f5f7bab6e714f99037cb7861a5201be5.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kbkqg"]
+load_path = "res://.godot/imported/3.png-9de7ec5cc4b3b732cd929912c971c0f4.ctex"
 
 [node name="MasterScene" type="Node2D"]
 script = ExtResource("1_o1y4r")
@@ -39,7 +43,7 @@ anchor_mode = 0
 [node name="TextureButton" type="TextureButton" parent="CanvasLayer"]
 offset_right = 64.0
 offset_bottom = 64.0
-texture_normal = ExtResource("3_3y80f")
-texture_pressed = ExtResource("4_b33j7")
+texture_normal = SubResource("CompressedTexture2D_tc5en")
+texture_pressed = SubResource("CompressedTexture2D_kbkqg")
 
 [node name="MineField" parent="." instance=ExtResource("5_y18ea")]

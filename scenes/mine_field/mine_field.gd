@@ -20,8 +20,8 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	game_dimensions = [9, 9, 9]
-	new_game(game_dimensions, 100)
+	game_dimensions = [9, 9]
+	new_game(game_dimensions, 5)
 	
 
 
@@ -29,7 +29,7 @@ func _ready():
 func _process(delta):
 	pass
 	
-	
+#region Game Logic (starting and ending)
 func new_game(dimensions: Array[int], m: int):
 	# setup or reset variables
 	d = len(game_dimensions)
@@ -120,6 +120,19 @@ func new_game(dimensions: Array[int], m: int):
 		add_child(main_grid_container)
 		game_grid_container = main_grid_container
 
+func lost():
+	#$gui.end_game(false)
+	for i in node_dict:
+		node_dict[i].lost()
+
+# Win condition
+func win():
+	#$gui.end_game(true)
+	for i in node_dict:
+		node_dict[i].won()
+#endregion
+
+
 #region Cell signal functions
 func _on_initialize(v):
 	var bombs = mines
@@ -181,16 +194,24 @@ func _on_zero_chain(v0: Array[int]):
 		# replace node_border variable (and no more stack overflows)
 		node_border = culled_new_border
 
-func _on_cell_clicked():
-	pass
+# regular click, used for determining win condition
+func _on_cell_clicked(id):
+	if (id == -1):
+		lost()
+	else:
+		cells_opened += 1
+		
+	if (cells_opened == node_dict.size() - mines):
+		win()
 
 func _on_cell_flagged(v :Array[int], flagged: bool):
 	for u in adjacency_vector_dictionary[d]:
 		var current_node: Array[int] = add(v, u)
-		if flagged:
-			node_dict[current_node].fid += 1 
-		else:
-			node_dict[current_node].fid -= 1 
+		if node_dict.get(current_node, null) != null:
+			if flagged:
+				node_dict[current_node].fid += 1 
+			else:
+				node_dict[current_node].fid -= 1 
 	
 # Change sprites of adjacent cells
 func _on_chord_pressed(v):
@@ -234,15 +255,17 @@ func _on_toggle_highlighted(v):
 			current_node.toggle_highlight()
 #endregion
 
+#region Helper functions
 # a helper function to jam all the .connects into so it's in one place
 func connect_node_signals(n):
-	n.toggle_highlighted.connect(_on_toggle_highlighted)
 	n.initialize.connect(_on_initialize)
 	n.zero_chain.connect(_on_zero_chain)
 	n.chord_pressed.connect(_on_chord_pressed)
 	n.chord_released.connect(_on_chord_released)
 	n.chord_canceled.connect(_on_chord_canceled)
 	n.flagged.connect(_on_cell_flagged)
+	n.clicked.connect(_on_cell_clicked)
+	n.toggle_highlighted.connect(_on_toggle_highlighted)
 
 # handles the logic of generating adjacency vectors for any dimension
 func generate_adjacency_vectors(dimension: int):
@@ -301,3 +324,4 @@ func add(v: Array[int], u) -> Array[int]:
 				arr.append(v[i] + u[i])
 			
 	return arr as Array[int]
+#endregion
