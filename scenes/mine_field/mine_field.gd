@@ -17,7 +17,7 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
-	new_game([2, 2, 2, 2, 2, 2, 2, 2, 2, 2], 10)
+	new_game([1, 1, 5, 10], 10)
 	
 	
 
@@ -49,7 +49,10 @@ func new_game(dimensions: Array[int], mines: int):
 	id.resize(len(dimensions))
 	id.fill(0)
 	node_0.pid = id.duplicate()
+	node_dict[id] = node_0
+	field_dict[id] = 0
 	main_grid_container.add_child(node_0)
+	
 	
 	for dimension in range(1, len(dimensions) + 1): #dimension being current dimension worked on
 		var dimension_index: int = dimension - 1
@@ -66,11 +69,12 @@ func new_game(dimensions: Array[int], mines: int):
 			
 			# to calculate size, just multiply the old container's size by how many times it'll be copied, and add the margins of current container
 			# this will factor in the margins being duplicated as well, compared to previous solution
-			new_grid_container.size = main_grid_container.size * Vector2(d, 1) + Vector2(((dimension - 1) / 2) * margin, 0)
+			new_grid_container.size = main_grid_container.size * Vector2(d, 1) + Vector2(((dimension - 1) / 2) * margin, 0) * (d - 1)
 		else:
 			new_grid_container.add_theme_constant_override('v_separation', ((dimension_index) / 2) * margin)
 			
-			new_grid_container.size = main_grid_container.size * Vector2(1, d) + Vector2(0, ((dimension_index) / 2) * margin)
+			new_grid_container.size = main_grid_container.size * Vector2(1, d) + Vector2(0, ((dimension_index) / 2) * margin) * (d - 1)
+			
 		
 		# It's always the case the first cell/row/3d layer/ ... / is always done
 		# so we only need to duplicate it dimension size - 1 times to achieve dimension size
@@ -95,6 +99,8 @@ func new_game(dimensions: Array[int], mines: int):
 						id[index] += 1
 					
 					current.pid = id.duplicate()
+					node_dict[id] = current
+					field_dict[id] = 0
 				else:
 					unvisited.append_array(current.get_children())
 				

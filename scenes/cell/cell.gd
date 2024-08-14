@@ -7,9 +7,11 @@ signal chord_released
 signal chord_canceled
 signal flagged
 signal clicked(id)
+signal highlighted
 
 var pid #(positional id) not used by this script but the mine_field script 
 var id # What kind of cell it is (number or mine)
+var fid #flagged id, id - surrounding flags
 var v # It's key within the cell dictionary
 var is_pressed = false
 var is_flagged = false
