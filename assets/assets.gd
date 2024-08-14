@@ -1,8 +1,7 @@
 extends Node
 
 #RR GG BB AA
-var colors = {Colors.UNKOWN: Color.hex(0xC7C7C7FF), Colors.PRESSED: Color.hex(0x808080FF)}
-enum Colors {UNKOWN, PRESSED}
+
 
 var red = {}
 

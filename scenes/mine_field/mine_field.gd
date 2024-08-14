@@ -1,16 +1,19 @@
 extends Node2D
 ## manages the mine field of the game
 
-var margin = 2
+
 const Cell: PackedScene = preload("res://scenes/cell/cell.tscn")
 
-var open: int = 0 # cells opened
-var mines: int = 10 # mine count
+# variables dealing with the field
+var cells_opened: int = 0
+var mines: int
 var field_dict: Dictionary = {} # game board
 var node_dict: Dictionary = {} # node arr (parallel dictionary)
-
 var game_dimensions: Array[int] # size of the mine field
 var d: int # the overall dimension of the board
+var game_grid_container = GridContainer.new()
+
+var margin = 2
 
 var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vectors which are useful to loop through for a lot of things
 
@@ -18,8 +21,8 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	game_dimensions = [4, 4, 4, 4]
-	d = len(game_dimensions)
 	new_game(game_dimensions, 10)
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -27,7 +30,12 @@ func _process(delta):
 	pass
 	
 	
-func new_game(dimensions: Array[int], mines: int):
+func new_game(dimensions: Array[int], m: int):
+	# setup or reset variables
+	d = len(game_dimensions)
+	mines = m
+	cells_opened = 0
+	game_grid_container.queue_free()
 	generate_adjacency_vectors(d)
 	
 	# generate base container and node
@@ -51,7 +59,7 @@ func new_game(dimensions: Array[int], mines: int):
 	var node_0 = Cell.instantiate() #node naught
 	node_0.pid = id.duplicate()
 	node_dict[node_0.pid] = node_0
-	field_dict[id] = 0
+	field_dict[node_0.pid] = 0
 	connect_node_signals(node_0)
 	main_grid_container.add_child(node_0)
 	
@@ -103,14 +111,84 @@ func new_game(dimensions: Array[int], mines: int):
 					
 					current.pid = id.duplicate()
 					node_dict[current.pid] = current
-					field_dict[id] = 0
+					field_dict[current.pid] = 0
 					connect_node_signals(current)
 				else:
 					unvisited.append_array(current.get_children())
 			new_grid_container.add_child(duped_gc)
 		main_grid_container = new_grid_container
 		add_child(main_grid_container)
+		game_grid_container = main_grid_container
 
+#region Cell signal functions
+func _on_initialize(v):
+	var bombs = mines
+	
+	while bombs > 0:
+		var k: Array[int] = node_dict.keys().pick_random()
+		
+		while (k == v or field_dict[k] == -1): # repeat if placing on clicked cell OR another mine
+			k = node_dict.keys().pick_random()
+		
+		# decrease mines left to place, update the field
+		bombs -= 1
+		field_dict[k] = -1
+		
+		# increment all adj cells
+		for u in adjacency_vector_dictionary[d]:
+			# Current cell vector w = keyCell + adjacency vector
+			var w = field_dict.get(add(k, u), null)
+			if (w != null and w != -1):
+				field_dict[add(k, u)] += 1
+		
+		print(k)
+		
+	for i in node_dict:
+		node_dict[i].id = field_dict[i]
+
+func _on_zero_chain(v0):
+	var nodes_checked = [v0] # keep track of opened nodes using their vector key
+	var node_border = [v0] # keep track of what nodes are at the border in order to expand on
+	var is_processing = true # true to first enter the loop 
+	
+	while is_processing:
+		var new_border = [] # generate the new node border
+		for v in node_border:
+			for u in adjacency_vector_dictionary[d]:
+				var current_node = v + u
+				# only add if it's not on the list
+				if not (current_node in new_border or current_node in nodes_checked):
+					new_border.append(current_node)
+		
+		# continue searching?
+		is_processing = false # assume false
+		
+		# replace node_border with only 0 cells (to later expand on)
+		var culled_new_border = []
+		for v in new_border:
+			nodes_checked.append(v)
+			if field_dict[v] == 0: # if atleast one cell is 0
+				is_processing = true
+				# add to the culled list, erasing from other array would require to loop by index and subtract 1 for every removal (as to not skip)
+				culled_new_border.append(v) # numbers (and mines) will stop the opening
+				
+			# reveal cell if it's not a mine
+			if field_dict[v] != -1:
+				node_dict[v].click(false)
+		
+		# replace node_border variable (and no more stack overflows)
+		node_border = culled_new_border
+
+func _on_cell_clicked():
+	pass
+func _on_cell_flagged():
+	pass
+func _on_chord_released():
+	pass
+func _on_chord_canceled():
+	pass
+func _on_chord_pressed():
+	pass
 
 func _on_toggle_highlighted(v):
 	for u in adjacency_vector_dictionary[d]:
@@ -118,10 +196,12 @@ func _on_toggle_highlighted(v):
 		
 		if current_node != null: # if exists, switch_highlight
 			current_node.toggle_highlight()
+#endregion
 
 # a helper function to jam all the .connects into so it's in one place
 func connect_node_signals(n):
 	n.toggle_highlighted.connect(_on_toggle_highlighted)
+	n.initialize.connect(_on_initialize)
 
 # handles the logic of generating adjacency vectors for any dimension
 func generate_adjacency_vectors(dimension: int):
