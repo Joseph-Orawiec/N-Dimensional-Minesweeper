@@ -7,16 +7,15 @@ signal chord_released
 signal chord_canceled
 signal flagged
 signal clicked(id)
-signal highlighted
+signal toggle_highlighted
 
-var pid #(positional id) not used by this script but the mine_field script 
-var id # What kind of cell it is (number or mine)
-var fid #flagged id, id - surrounding flags
-var v # It's key within the cell dictionary
-var is_pressed = false
-var is_flagged = false
-var is_chording = false
-var is_highlighted = false
+var id: int # What kind of cell it is (number or mine)
+var fid: int #flagged id, id - surrounding flags
+var pid: Array[int] # It's key within the cell dictionary, positional id
+var is_pressed: bool = false
+var is_flagged: bool = false
+var is_chording: bool = false
+var is_highlighted: bool = false
 
 var pause = false
 
@@ -52,7 +51,7 @@ func _process(delta):
 					pass
 
 # just a function dedicated to handling the highlight node
-func highlight():
+func toggle_highlight():
 	if is_highlighted:
 		cell_components['highlight'].visible = false
 		is_highlighted = false
@@ -65,7 +64,8 @@ func highlight():
 func _on_mouse_entered():
 	# start polling if mouse is on cell 
 	if not pause:
-		highlight()
+		toggle_highlight()
+		toggle_highlighted.emit(pid)
 		set_process(true)
 	
 func _on_mouse_exited():
@@ -75,10 +75,11 @@ func _on_mouse_exited():
 		# only reset the sprite if it's not flagged and not already pressed 
 		if not is_pressed and not is_flagged:
 			cell_components["inner"].color = Assets.colors[Assets.Colors.UNKOWN]
-			highlight()
+			toggle_highlight()
+			toggle_highlighted.emit(pid)
 			
 		# make sure to reset cells' sprites if stopped chording (was about to but moved mouse which means there was no release)
 		if is_chording:
 			is_chording = false
-			chord_canceled.emit(v)
+			chord_canceled.emit(pid)
 #endregion

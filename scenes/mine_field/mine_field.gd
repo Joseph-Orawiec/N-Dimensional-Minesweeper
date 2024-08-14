@@ -9,17 +9,17 @@ var mines: int = 10 # mine count
 var field_dict: Dictionary = {} # game board
 var node_dict: Dictionary = {} # node arr (parallel dictionary)
 
-var dimension: Array[int] # size of the mine field
+var game_dimensions: Array[int] # size of the mine field
+var d: int # the overall dimension of the board
 
 var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vectors which are useful to loop through for a lot of things
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
-	new_game([1, 1, 5, 10], 10)
-	
-	
+	game_dimensions = [4, 4, 4, 4]
+	d = len(game_dimensions)
+	new_game(game_dimensions, 10)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,8 +28,9 @@ func _process(delta):
 	
 	
 func new_game(dimensions: Array[int], mines: int):
-	generate_adjacency_vectors(len(dimensions))
+	generate_adjacency_vectors(d)
 	
+	# generate base container and node
 	var main_grid_container = GridContainer.new()
 	add_child(main_grid_container) # on 1st dimension construction the .reparent wont work as it doesn't have a parent
 	main_grid_container.size = Vector2.ONE * 50
@@ -43,21 +44,23 @@ func new_game(dimensions: Array[int], mines: int):
 	#main_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
 	#main_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
 	
-	# TODO, connect signals 
-	var node_0 = Cell.instantiate() #node naught
 	var id: Array[int] = []
-	id.resize(len(dimensions))
+	id.resize(d)
 	id.fill(0)
+	
+	var node_0 = Cell.instantiate() #node naught
 	node_0.pid = id.duplicate()
-	node_dict[id] = node_0
+	node_dict[node_0.pid] = node_0
 	field_dict[id] = 0
+	connect_node_signals(node_0)
 	main_grid_container.add_child(node_0)
 	
-	
-	for dimension in range(1, len(dimensions) + 1): #dimension being current dimension worked on
+	# expand into higher dimensions
+	for dimension in range(1, d + 1): #dimension being current dimension worked on
 		var dimension_index: int = dimension - 1
 		var d: int = dimensions[dimension_index] # dimension size
 		
+		# setup new grid container to hold other GCs
 		var new_grid_container = GridContainer.new()
 		new_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
 		new_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
@@ -68,22 +71,22 @@ func new_game(dimensions: Array[int], mines: int):
 			new_grid_container.add_theme_constant_override('h_separation', ((dimension - 1) / 2) * margin)
 			
 			# to calculate size, just multiply the old container's size by how many times it'll be copied, and add the margins of current container
-			# this will factor in the margins being duplicated as well, compared to previous solution
+			# multiplied by 1 minus the dimension size (like a fencepost)
 			new_grid_container.size = main_grid_container.size * Vector2(d, 1) + Vector2(((dimension - 1) / 2) * margin, 0) * (d - 1)
 		else:
 			new_grid_container.add_theme_constant_override('v_separation', ((dimension_index) / 2) * margin)
-			
 			new_grid_container.size = main_grid_container.size * Vector2(1, d) + Vector2(0, ((dimension_index) / 2) * margin) * (d - 1)
 			
 		
 		# It's always the case the first cell/row/3d layer/ ... / is always done
 		# so we only need to duplicate it dimension size - 1 times to achieve dimension size
-		
 		for i in range(1, d):
 			print(dimension, ' ', float(i)/d)
 			var duped_gc = main_grid_container.duplicate()
 			# change all of the inner cell's id's to reflect a different position
 			var unvisited = duped_gc.get_children()
+			
+			#keep searching within nested containers to find the cell
 			while len(unvisited) != 0:
 				var current = unvisited.pop_front()
 				if current is ColorRect:
@@ -99,17 +102,26 @@ func new_game(dimensions: Array[int], mines: int):
 						id[index] += 1
 					
 					current.pid = id.duplicate()
-					node_dict[id] = current
+					node_dict[current.pid] = current
 					field_dict[id] = 0
+					connect_node_signals(current)
 				else:
 					unvisited.append_array(current.get_children())
-				
-			
 			new_grid_container.add_child(duped_gc)
-		
-		
 		main_grid_container = new_grid_container
 		add_child(main_grid_container)
+
+
+func _on_toggle_highlighted(v):
+	for u in adjacency_vector_dictionary[d]:
+		var current_node = node_dict.get(add(v, u), null)
+		
+		if current_node != null: # if exists, switch_highlight
+			current_node.toggle_highlight()
+
+# a helper function to jam all the .connects into so it's in one place
+func connect_node_signals(n):
+	n.toggle_highlighted.connect(_on_toggle_highlighted)
 
 # handles the logic of generating adjacency vectors for any dimension
 func generate_adjacency_vectors(dimension: int):
@@ -162,9 +174,9 @@ func add(v: Array[int], u):
 				arr.append(v[i] + u)
 			
 		TYPE_ARRAY:
-			assert(len(v) == len(u.v))
+			assert(len(v) == len(u))
 			
 			for i in range(len(v)):
-				arr.append(v[i] + u.v[i])
+				arr.append(v[i] + u[i])
 			
 	return arr

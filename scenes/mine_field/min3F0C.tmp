@@ -1,0 +1,274 @@
+[gd_scene load_steps=4 format=3 uid="uid://dpxp0s2375nlw"]
+
+[ext_resource type="Script" path="res://scenes/mine_field/mine_field.gd" id="1_5lieg"]
+[ext_resource type="PackedScene" uid="uid://b5ln8co377bft" path="res://tests_during_development/camera/camera_2d.tscn" id="2_xfpd3"]
+[ext_resource type="PackedScene" uid="uid://m7rtx51lnyhb" path="res://scenes/cell/cell.tscn" id="3_iqo1e"]
+
+[node name="mineField" type="Node2D"]
+script = ExtResource("1_5lieg")
+
+[node name="Camera2D" parent="." instance=ExtResource("2_xfpd3")]
+
+[node name="GridContainer" type="GridContainer" parent="."]
+visible = false
+offset_right = 402.0
+offset_bottom = 300.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 0
+columns = 2
+
+[node name="GridContainer2" type="GridContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+
+[node name="GridContainer" type="GridContainer" parent="GridContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer2/GridContainer" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer2/GridContainer" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer2/GridContainer" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer2/GridContainer" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer2" type="GridContainer" parent="GridContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer2/GridContainer2" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer2/GridContainer2" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer2/GridContainer2" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer2/GridContainer2" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer3" type="GridContainer" parent="GridContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer2/GridContainer3" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer2/GridContainer3" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer2/GridContainer3" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer2/GridContainer3" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer4" type="GridContainer" parent="GridContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer2/GridContainer4" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer2/GridContainer4" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer2/GridContainer4" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer2/GridContainer4" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer5" type="GridContainer" parent="GridContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer2/GridContainer5" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer2/GridContainer5" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer2/GridContainer5" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer2/GridContainer5" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer6" type="GridContainer" parent="GridContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer2/GridContainer6" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer2/GridContainer6" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer2/GridContainer6" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer2/GridContainer6" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer3" type="GridContainer" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+
+[node name="GridContainer" type="GridContainer" parent="GridContainer/GridContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer3/GridContainer" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer3/GridContainer" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer3/GridContainer" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer3/GridContainer" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer2" type="GridContainer" parent="GridContainer/GridContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer3/GridContainer2" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer3/GridContainer2" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer3/GridContainer2" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer3/GridContainer2" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer3" type="GridContainer" parent="GridContainer/GridContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer3/GridContainer3" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer3/GridContainer3" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer3/GridContainer3" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer3/GridContainer3" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer4" type="GridContainer" parent="GridContainer/GridContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer3/GridContainer4" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer3/GridContainer4" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer3/GridContainer4" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer3/GridContainer4" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer5" type="GridContainer" parent="GridContainer/GridContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer3/GridContainer5" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer3/GridContainer5" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer3/GridContainer5" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer3/GridContainer5" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="GridContainer6" type="GridContainer" parent="GridContainer/GridContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Cell" parent="GridContainer/GridContainer3/GridContainer6" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell2" parent="GridContainer/GridContainer3/GridContainer6" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell3" parent="GridContainer/GridContainer3/GridContainer6" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
+
+[node name="Cell4" parent="GridContainer/GridContainer3/GridContainer6" instance=ExtResource("3_iqo1e")]
+layout_mode = 2
