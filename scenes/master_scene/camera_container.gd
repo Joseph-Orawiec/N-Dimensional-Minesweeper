@@ -18,11 +18,14 @@ func _ready():
 	pass
 	
 
-func initialize(node, n):
+func initialize(node, d):
 	const dx: int = 1280
 	const dy: int = 720
+	
+	var n = clamp(3 ** (d - 2), 1, INF)
 	columns = n
-	for i in (n * n) - 1:
+	
+	for i in n - 1:
 		var node2 = main_viewport.duplicate()
 		node2.get_child(0).world_2d = main_subiewport.world_2d
 		node2.get_child(0).get_child(0).position = main_camera.position + Vector2((dx/n) * ((i + 1) % n), (dy/n) * ((i + 1) / n))

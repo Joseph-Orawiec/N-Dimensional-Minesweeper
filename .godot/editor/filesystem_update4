@@ -1,9 +1,11 @@
-res://scenes/cell/cell.tscn
-res://scenes/mine_field/mine_field.gd
-res://scenes/gui/gui.tscn
 res://scenes/master_scene/master_scene.tscn
+res://scenes/mine_field/mine_field.gd
+res://scenes/master_scene/camera_container.gd
+res://scenes/cell/cell.tscn
+res://scenes/gui/gui.tscn
 res://scenes/mine_field/mine_field.tscn
 res://tests_during_development/camera/camera_2d.tscn
 res://tests_during_development/camera_test.tscn
 res://tests_during_development/DebugPaper.tscn
-res://scenes/master_scene/SubViewportContainer.gd
+res://scenes/master_scene/master_scene.gd
+res://scenes/master_scene/GridContainer.gd

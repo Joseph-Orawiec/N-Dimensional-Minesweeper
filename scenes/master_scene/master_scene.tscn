@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://6fhgqa1ph327"]
+[gd_scene load_steps=7 format=3 uid="uid://6fhgqa1ph327"]
 
 [ext_resource type="Script" path="res://scenes/master_scene/master_scene.gd" id="1_o1y4r"]
+[ext_resource type="Script" path="res://scenes/master_scene/GridContainer.gd" id="2_lwpes"]
 [ext_resource type="Script" path="res://scenes/master_scene/camera_container.gd" id="2_umoqm"]
 [ext_resource type="Script" path="res://scenes/master_scene/SubViewportContainer.gd" id="3_ksr3y"]
+[ext_resource type="Texture2D" uid="uid://b0wxsmo1fmkmu" path="res://assets/sprites/yellow.png" id="4_tpwdp"]
 [ext_resource type="PackedScene" uid="uid://dpxp0s2375nlw" path="res://scenes/mine_field/mine_field.tscn" id="5_y18ea"]
 
 [node name="MasterScene" type="CanvasLayer"]
@@ -38,3 +40,25 @@ render_target_update_mode = 4
 anchor_mode = 0
 
 [node name="MineField" parent="." instance=ExtResource("5_y18ea")]
+
+[node name="GridContainer" type="GridContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+script = ExtResource("2_lwpes")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="GridContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("4_tpwdp")
+region_rect = Rect2(0, 0, 50, 50)
+patch_margin_left = 1
+patch_margin_top = 1
+patch_margin_right = 1
+patch_margin_bottom = 1
