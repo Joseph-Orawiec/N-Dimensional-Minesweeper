@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://6fhgqa1ph327"]
+[gd_scene load_steps=5 format=3 uid="uid://6fhgqa1ph327"]
 
 [ext_resource type="Script" path="res://scenes/master_scene/master_scene.gd" id="1_o1y4r"]
 [ext_resource type="Script" path="res://scenes/master_scene/camera_container.gd" id="2_umoqm"]
+[ext_resource type="Script" path="res://scenes/master_scene/SubViewportContainer.gd" id="3_ksr3y"]
 [ext_resource type="PackedScene" uid="uid://dpxp0s2375nlw" path="res://scenes/mine_field/mine_field.tscn" id="5_y18ea"]
 
 [node name="MasterScene" type="CanvasLayer"]
@@ -25,8 +26,10 @@ size_flags_vertical = 3
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
 stretch = true
+script = ExtResource("3_ksr3y")
 
 [node name="SubViewport" type="SubViewport" parent="CameraContainer/SubViewportContainer"]
+handle_input_locally = false
 physics_object_picking = true
 size = Vector2i(1280, 720)
 render_target_update_mode = 4
