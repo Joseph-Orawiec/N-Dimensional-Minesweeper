@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://m7rtx51lnyhb"]
+[gd_scene load_steps=5 format=3 uid="uid://m7rtx51lnyhb"]
 
 [ext_resource type="Script" path="res://scenes/cell/cell.gd" id="1_r1v4s"]
 [ext_resource type="Texture2D" uid="uid://d1euh7y5k5qn0" path="res://assets/sprites/flag.png" id="2_fw78r"]
@@ -8,9 +8,6 @@
 line_spacing = 0.0
 font_size = 33
 font_color = Color(0, 0, 0, 1)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_nteon"]
-size = Vector2(50, 50)
 
 [node name="Cell" type="ColorRect"]
 offset_right = 50.0
@@ -72,9 +69,3 @@ layout_mode = 2
 label_settings = SubResource("LabelSettings_0si0s")
 horizontal_alignment = 1
 vertical_alignment = 3
-
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(25, 25)
-shape = SubResource("RectangleShape2D_nteon")

@@ -28,9 +28,8 @@ var pause = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var node = $Area2D
-	node.mouse_entered.connect(_on_mouse_entered)
-	node.mouse_exited.connect(_on_mouse_exited)
+	self.mouse_entered.connect(_on_mouse_entered)
+	self.mouse_exited.connect(_on_mouse_exited)
 	set_process(false) 
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
