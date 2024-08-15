@@ -1,9 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dpxp0s2375nlw"]
+[gd_scene load_steps=2 format=3 uid="uid://dpxp0s2375nlw"]
 
 [ext_resource type="Script" path="res://scenes/mine_field/mine_field.gd" id="1_5lieg"]
-[ext_resource type="PackedScene" uid="uid://b5ln8co377bft" path="res://tests_during_development/camera/camera_2d.tscn" id="2_xfpd3"]
 
-[node name="mineField" type="Node2D"]
+[node name="MineField" type="Node2D"]
 script = ExtResource("1_5lieg")
-
-[node name="Camera2D" parent="." instance=ExtResource("2_xfpd3")]

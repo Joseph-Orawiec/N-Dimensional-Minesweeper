@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://tests_during_development/DebugPaper.tscn" id="1_u0llf"]
 [ext_resource type="PackedScene" uid="uid://b5ln8co377bft" path="res://tests_during_development/camera/camera_2d.tscn" id="2_uu71u"]
 
-
 [node name="GridContainer" type="GridContainer"]
 anchors_preset = 15
 anchor_right = 1.0

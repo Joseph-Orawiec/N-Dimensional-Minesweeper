@@ -1,11 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cj60y3wspotws"]
+[gd_scene load_steps=4 format=3 uid="uid://cj60y3wspotws"]
 
 [ext_resource type="Script" path="res://tests_during_development/multicam.gd" id="1_2wu4c"]
 [ext_resource type="Script" path="res://tests_during_development/grid_container.gd" id="2_0nkkq"]
-[ext_resource type="Texture2D" uid="uid://bc3r8wq3yuun5" path="res://assets/temp/2.png" id="3_dbwck"]
-[ext_resource type="Texture2D" uid="uid://dmrxjuar5fy2g" path="res://assets/temp/3.png" id="4_1sceu"]
 [ext_resource type="PackedScene" uid="uid://w8wixvvrkxuq" path="res://tests_during_development/DebugPaper.tscn" id="5_f2r8k"]
-[ext_resource type="Texture2D" uid="uid://bhik3mu6w1dw4" path="res://tests_during_development/1282x722.PNG" id="6_hwufl"]
 
 [node name="Multicam" type="Node2D"]
 script = ExtResource("1_2wu4c")
@@ -31,25 +28,11 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/CameraContainer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(2, 2)
+size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="CanvasLayer/CameraContainer/SubViewportContainer/SubViewport" groups=["cameras"]]
 anchor_mode = 0
 
-[node name="TextureButton" type="TextureButton" parent="CanvasLayer"]
-visible = false
-offset_right = 64.0
-offset_bottom = 64.0
-texture_normal = ExtResource("3_dbwck")
-texture_pressed = ExtResource("4_1sceu")
-
 [node name="DebugPaper" parent="." instance=ExtResource("5_f2r8k")]
 position = Vector2(1280, 720)
-
-[node name="TextureRect" type="TextureRect" parent="."]
-offset_left = -1.0
-offset_top = -1.0
-offset_right = 1281.0
-offset_bottom = 721.0
-texture = ExtResource("6_hwufl")

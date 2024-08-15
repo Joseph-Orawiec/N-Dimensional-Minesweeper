@@ -27,4 +27,8 @@ func _input(event):
 		node.position = get_global_mouse_position()
 		print(node.position)
 		add_child(node)
+	
+	if event.is_action_pressed("m1"):
+		print('DP global ', get_global_mouse_position())
+		print('DP local ', get_local_mouse_position())
 		

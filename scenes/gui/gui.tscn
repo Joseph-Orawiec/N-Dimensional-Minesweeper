@@ -1,13 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://ct5577fkkeppu"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tc5en"]
-load_path = "res://.godot/imported/2.png-f5f7bab6e714f99037cb7861a5201be5.ctex"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kbkqg"]
-load_path = "res://.godot/imported/3.png-9de7ec5cc4b3b732cd929912c971c0f4.ctex"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_66k1a"]
-load_path = "res://.godot/imported/4.png-a208d32f638e1a7f1499479a5a1406ba.ctex"
 
 [node name="gui" type="CanvasLayer"]
 

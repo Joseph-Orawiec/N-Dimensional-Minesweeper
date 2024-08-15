@@ -20,18 +20,17 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	game_dimensions = [9, 9]
-	new_game(game_dimensions, 5)
-	
-
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
 	
+
 #region Game Logic (starting and ending)
 func new_game(dimensions: Array[int], m: int):
 	# setup or reset variables
+	game_dimensions = dimensions
 	d = len(game_dimensions)
 	mines = m
 	cells_opened = 0
@@ -153,8 +152,6 @@ func _on_initialize(v):
 			var w = field_dict.get(add(k, u), null)
 			if (w != null and w != -1):
 				field_dict[add(k, u)] += 1
-		
-		print(k)
 		
 	for i in node_dict:
 		node_dict[i].id = field_dict[i]

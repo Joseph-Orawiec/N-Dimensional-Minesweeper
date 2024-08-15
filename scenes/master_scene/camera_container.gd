@@ -22,7 +22,6 @@ func initialize(node, n):
 	const dx: int = 1280
 	const dy: int = 720
 	columns = n
-	
 	for i in (n * n) - 1:
 		var node2 = main_viewport.duplicate()
 		node2.get_child(0).world_2d = main_subiewport.world_2d
@@ -34,6 +33,7 @@ func initialize(node, n):
 
 	
 	node.reparent(main_subiewport, true)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 # mastee

@@ -1,13 +1,17 @@
-extends Node2D
+extends CanvasLayer
+
+
+#@onready var world= $MineField
+#@onready var camera = $CameraContainer
 
 @onready var world= $MineField
-@onready var canvas_layer = $CanvasLayer
-@onready var camera = $CanvasLayer/CameraContainer
+@onready var camera = $CameraContainer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
-	camera.initialize(world, 1)
+	var board: Array[int] = [4, 4, 4, 4]
+	world.new_game(board, 10)
+	camera.initialize(world, 2)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
