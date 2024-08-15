@@ -12,6 +12,3 @@ res://tests_during_development/DebugPaper.tscn
 res://scenes/master_scene/master_scene.gd
 res://scenes/cell/cell.gd
 res://scenes/master_scene/camera_container.gd
-res://scenes/master_scene/SubViewportContainer.gd
-res://scenes/master_scene/Area2D.gd
-res://tests_during_development/camera_test.gd
