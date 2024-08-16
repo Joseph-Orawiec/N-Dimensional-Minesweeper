@@ -242,7 +242,10 @@ func _on_chord_released(v):
 			
 # reset the sprites of adjacent cell if mouse moved off
 func _on_chord_canceled(v):
-	pass
+	for u in adjacency_vector_dictionary[d]:
+		var current_node = node_dict.get(add(v, u), null)
+		if current_node != null: # if exists
+			current_node.chord_cancel()
 
 func _on_toggle_highlighted(v):
 	for u in adjacency_vector_dictionary[d]:
@@ -322,3 +325,7 @@ func add(v: Array[int], u) -> Array[int]:
 			
 	return arr as Array[int]
 #endregion
+
+func _input(event):
+	if event.is_action_pressed("m1"): 
+		print("MF ", get_local_mouse_position(), " ", event.position)

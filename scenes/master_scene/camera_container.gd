@@ -9,34 +9,55 @@ const zoom_max: float = pow(1.11, 21/2) #roughly 2.9915
 var cameras #placeholder to be initialized later
 var zoom1 #placeholder to be initialized later
 
+
 @onready var main_viewport = $SubViewportContainer
 @onready var main_subiewport = $SubViewportContainer/SubViewport
 @onready var main_camera = $SubViewportContainer/SubViewport/Camera2D
 
+var temppp = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	temppp.append([main_viewport, main_subiewport, main_camera])
 	pass
 	
 
-func initialize(node, d):
-	const dx: int = 1280
-	const dy: int = 720
+func initialize(node, dimensions):
+	var d: int = len(dimensions)
 	
-	var n = clamp(3 ** (d - 2), 1, INF)
+	var n = 3 ** clampi(d - 2, 0, d)
 	columns = n
 	
-	for i in n - 1:
+	var arr: Array[int]
+	
+	# calculate how far each camera needs to be
+	var horizontal_cells = dimensions[0]
+	var vertical_cells = dimensions[1]
+	
+	var total_horizontal = horizontal_cells * 50
+	var total_vertical = vertical_cells * 50
+	
+	for i in range(2, d):
+		if i % 2 == 0: #odd dimension
+			total_horizontal = total_horizontal + node.margin
+			arr.append(total_horizontal)
+		else:
+			total_vertical = total_vertical + node.margin
+			arr.append(total_vertical)
+	
+	for i in range(1, n):
 		var node2 = main_viewport.duplicate()
 		node2.get_child(0).world_2d = main_subiewport.world_2d
-		node2.get_child(0).get_child(0).position = main_camera.position + Vector2((dx/n) * ((i + 1) % n), (dy/n) * ((i + 1) / n))
+		node2.get_child(0).get_child(0).position = main_camera.position + Vector2(total_horizontal, 0) * i
 		add_child(node2)
+		
+		temppp.append([node2, node2.get_child(0), node2.get_child(0).get_child(0)])
 	
 	cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
 	zoom1 = cameras[0].zoom
 
 	
 	node.reparent(main_subiewport, true)
-	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 # mastee

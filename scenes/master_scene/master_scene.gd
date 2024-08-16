@@ -11,13 +11,16 @@ extends CanvasLayer
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var board: Array[int] = [10, 10, 4]
-	world.new_game(board, 10)
-	camera.initialize(world, len(board))
+	world.new_game(board, 40)
+	camera.initialize(world, board)
 	c_borders.initialize(len(board))
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if Input.is_action_just_pressed("space"):
-		print_tree_pretty()
+		
+		
+		var a = camera.temppp
+		print()
 	pass
