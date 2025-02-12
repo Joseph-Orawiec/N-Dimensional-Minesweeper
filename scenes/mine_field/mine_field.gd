@@ -7,7 +7,7 @@ const Cell: PackedScene = preload("res://scenes/cell/cell.tscn")
 # variables dealing with the field
 var cells_opened: int = 0
 var mines: int
-var field_dict: Dictionary = {} # game board
+var bomb_list: Array[Array] # game board
 var node_dict: Dictionary = {} # node arr (parallel dictionary)
 var game_dimensions: Array[int] # size of the mine field
 var d: int # the overall dimension of the board
@@ -58,7 +58,6 @@ func new_game(dimensions: Array[int], m: int):
 	var node_0 = Cell.instantiate() #node naught
 	node_0.pid = id.duplicate()
 	node_dict[node_0.pid] = node_0
-	field_dict[node_0.pid] = 0
 	connect_node_signals(node_0)
 	main_grid_container.add_child(node_0)
 	
@@ -110,7 +109,6 @@ func new_game(dimensions: Array[int], m: int):
 					
 					current.pid = id.duplicate()
 					node_dict[current.pid] = current
-					field_dict[current.pid] = 0
 					connect_node_signals(current)
 				else:
 					unvisited.append_array(current.get_children())
@@ -136,26 +134,33 @@ func win():
 func _on_initialize(v):
 	var bombs = mines
 	
+	print(v)
+	
+	
+	
 	while bombs > 0:
 		var k: Array[int] = node_dict.keys().pick_random()
 		
-		while (k == v or field_dict[k] == -1): # repeat if placing on clicked cell OR another mine
+		while (k == v or k in bomb_list): # repeat if placing on clicked cell OR another mine
 			k = node_dict.keys().pick_random()
-		
+			
 		# decrease mines left to place, update the field
 		bombs -= 1
-		field_dict[k] = -1
+		bomb_list.append(k)
+		node_dict[k].is_bomb = true
 		
 		# increment all adj cells
 		for u in adjacency_vector_dictionary[d]:
 			# Current cell vector w = keyCell + adjacency vector
-			var w = field_dict.get(add(k, u), null)
-			if (w != null and w != -1):
-				field_dict[add(k, u)] += 1
-		
+			var w = node_dict.get(add(k, u), null)
+			if (w != null):
+				node_dict[add(k, u)].id += 1
+				node_dict[add(k, u)].fid += 1
+	print(bomb_list)
+	
+	# give the update to al other cells
 	for i in node_dict:
-		node_dict[i].id = field_dict[i]
-		node_dict[i].fid = field_dict[i]
+		node_dict[i].has_started = true
 
 func _on_zero_chain(v0: Array[int]):
 	var nodes_checked: Array[Array] = [v0] # keep track of opened nodes using their vector key
@@ -179,21 +184,21 @@ func _on_zero_chain(v0: Array[int]):
 		for v in new_border:
 			if node_dict.get(v, null) != null: # only check if the node exists first
 				nodes_checked.append(v)
-				if field_dict[v] == 0: # if atleast one cell is 0
+				if node_dict[v].id == 0: # if atleast one cell is 0
 					is_processing = true
 					# add to the culled list, erasing from other array would require to loop by index and subtract 1 for every removal (as to not skip)
 					culled_new_border.append(v) # numbers (and mines) will stop the opening
 					
 				# reveal cell if it's not a mine
-				if field_dict[v] != -1:
+				if node_dict[v].is_bomb == false:
 					node_dict[v].click(false)
 		
 		# replace node_border variable (and no more stack overflows)
 		node_border = culled_new_border
 
 # regular click, used for determining win condition
-func _on_cell_clicked(id):
-	if (id == -1):
+func _on_cell_clicked(pid):
+	if (node_dict[pid].is_bomb):
 		lost()
 	else:
 		cells_opened += 1
@@ -314,8 +319,10 @@ func add(v: Array[int], u) -> Array[int]:
 	var arr: Array[int] = []
 	match typeof(u):
 		TYPE_FLOAT, TYPE_INT:
-			for i in range(len(v)):
-				arr.append(v[i] + u)
+			pass
+			# do i even use this??
+			#for i in range(len(v)):
+				#arr.append(v[i] + u)
 			
 		TYPE_ARRAY:
 			assert(len(v) == len(u))
@@ -327,5 +334,4 @@ func add(v: Array[int], u) -> Array[int]:
 #endregion
 
 func _input(event):
-	if event.is_action_pressed("m1"): 
-		print("MF ", get_local_mouse_position(), " ", event.position)
+	pass

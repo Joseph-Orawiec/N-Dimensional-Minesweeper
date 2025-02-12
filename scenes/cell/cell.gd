@@ -13,13 +13,15 @@ enum Colors {UNKOWN, PRESSED, OPENED, FLAGGED_WRONG, BOMB}
 var  colors = {Colors.UNKOWN: Color.hex(0xC6C6C6FF), Colors.PRESSED: Color.hex(0x808080FF), Colors.OPENED: Color.hex(0xFFFFFFFF),
  Colors.FLAGGED_WRONG: Color.hex(0xffa0a0FF), Colors.BOMB: Color.RED, } #basically a constant
 
-var id: int = -2 # What kind of cell it is (number or mine)
-var fid: int #flagged id, id - surrounding flags
+var id: int = 0 # How many adjacent bombs
+var fid: int = 0 #flagged id, id - surrounding flags
 var pid: Array[int] # It's key within the cell dictionary, positional id
 var is_pressed: bool = false
 var is_flagged: bool = false
 var is_chording: bool = false
 var is_highlighted: bool = false
+var is_bomb: bool = false
+var has_started: bool = false
 
 var pause = false
 
@@ -44,9 +46,9 @@ func _process(delta):
 				cell_components["inner"].color = colors[Colors.PRESSED]
 			if Input.is_action_just_released("m1"): # Clicked
 				# instead of making a is_started bool, ID can take it's place
-				# if -2 (int's default is 0 rather than null), it's not started yet, emit signal to initialize
+				# if has_started is false it's not started yet, emit signal to initialize
 				# as the first click is never a mine
-				if id == -2:
+				if has_started == false:
 					initialize.emit(pid)
 				# reveal cell
 				click()
@@ -74,20 +76,34 @@ func _process(delta):
 func won():
 	pause = true
 	set_process(false)
-	if id == -1 and not is_flagged:
+	if is_bomb and not is_flagged:
 		flagged.emit(true)
 		cell_components["flag"].visible = true
 		
 func lost():
 	pause = true
 	set_process(false)
-	if id == -1 and not is_pressed: # reveal mine
+	if is_bomb and not is_pressed: # reveal mine
 		cell_components["bomb"].visible = true
 		cell_components["inner"].color = colors[Colors.OPENED]
 	
-	if id != -1 and is_flagged: # 
+	if is_bomb == false and is_flagged: # 
 		cell_components["flag"].visible = true
 		cell_components["inner"].color = colors[Colors.FLAGGED_WRONG]
+	else:
+		
+		# click reveal logic copied
+		if is_bomb == false:
+			if id == 0:
+				cell_components["inner"].color = colors[Colors.OPENED]
+			else:
+				cell_components["text container"].visible = true
+				
+				# https://www.desmos.com/calculator/i27t16hwwj
+				var temp_color = cos((2 * PI)/80 * (id + 4))
+				cell_components["inner"].color = Color(1, temp_color, temp_color)
+				#cell_components["inner"].color = colors[Colors.OPENED]
+				cell_components["text"].text = str(id)
 #endregion
 
 # player click
@@ -96,22 +112,29 @@ func click(is_emitting:bool = true):
 	if not is_flagged:
 		if not is_pressed:
 			is_pressed = true
-			if id == -1:
+			if is_bomb:
 				# special bomb case
 				cell_components["bomb"].visible = true
 				cell_components["inner"].color = colors[Colors.BOMB]
 			else:
-				cell_components["text container"].visible = true
-				cell_components["text"].text = str(id)
-				cell_components["inner"].color = colors[Colors.OPENED]
+				if id == 0 and is_bomb == false:
+					cell_components["inner"].color = colors[Colors.OPENED]
+				else:
+					cell_components["text container"].visible = true
+					
+					# https://www.desmos.com/calculator/i27t16hwwj
+					var temp_color = cos((2 * PI)/80 * (id + 4))
+					cell_components["inner"].color = Color(1, temp_color, temp_color)
+					#cell_components["inner"].color = colors[Colors.OPENED]
+					cell_components["text"].text = str(id)
 			
 			# prevent trying to zero chain recursively as previously implemented
-			if id == 0 and is_emitting:
+			if id == 0 and is_emitting and is_bomb == false:
 				zero_chain.emit(pid)
 			
-			clicked.emit(id)
+			clicked.emit(pid)
 			
-			if id == -1:
+			if is_bomb:
 				set_process(false)
 
 #region Chording logic

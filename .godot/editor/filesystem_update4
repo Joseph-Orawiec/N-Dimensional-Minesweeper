@@ -13,3 +13,4 @@ res://scenes/master_scene/Camera2D.gd
 res://tests_during_development/legacy/master_scene/master_scene.gd
 res://tests_during_development/legacy/master_scene/camera_container.gd
 res://tests_during_development/legacy/master_scene/master_scene.tscn
+res://scenes/cell/cell.gd

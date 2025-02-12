@@ -3,13 +3,8 @@ extends Camera2D
 var previous_coordinates
 var is_dragging
 const pa = 1.11 # Area proportionality constant
-const zoom_min = pow(1.11, -22/2) #roughly .3
-const zoom_max = pow(1.11, 21/2) #roughly 2.9915
-
-@onready var main_vp = $SubViewportContainer/SubViewport
-@onready var alt_vp = $SubViewportContainer2/SubViewport2
-
-
+const zoom_min = pow(1.11, -22/2.0) #roughly .3
+const zoom_max = pow(1.11, 21/2.0) #roughly 2.9915
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,10 +14,6 @@ func _ready():
 # mastee
 func _process(delta):
 	pass
-	
-
-func vector_mod(u, v):
-	return Vector2(fposmod(u.x, v.x), fposmod(u.y, v.y))
 
 func _input(event):
 	# Zoom based on cursor position
