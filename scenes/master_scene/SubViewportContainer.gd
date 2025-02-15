@@ -25,7 +25,8 @@ func _input(event):
 		
 		if (is_within_x_bounds and is_within_y_bounds):
 			# shift the event position by the subviewport container and by the camera within the subviewport container
-			event.position = event.position - position + get_child(0).get_child(0).position 
+			var camera = get_child(0).get_child(0)
+			event.position = (event.position - position) * (1/camera.zoom.x) + camera.position
 			get_parent().get_child(0).get_child(0).push_input(event, true)
 			#get_child(0).push_input(event)
 			if event.is_action_pressed("m1"): 		

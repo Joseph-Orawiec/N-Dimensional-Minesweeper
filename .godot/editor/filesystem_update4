@@ -1,11 +1,6 @@
-res://tests_during_development/legacy/master_scene/master_scene.tscn
-res://scenes/mine_field/mine_field.gd
-res://tests_during_development/legacy/master_scene/master_scene.gd
 res://scenes/master_scene/master_scene.tscn
+res://scenes/mine_field/mine_field.gd
 res://scenes/cell/cell.tscn
 res://scenes/mine_field/mine_field.tscn
-res://scenes/cell/cell.gd
-res://tests_during_development/legacy/master_scene/SubViewportContainer.gd
-res://tests_during_development/legacy/master_scene/Camera2D.gd
-res://tests_during_development/legacy/master_scene/camera_container.gd
-res://tests_during_development/legacy/master_scene/SubViewport.gd
+res://scenes/master_scene/SubViewportContainer.gd
+res://scenes/master_scene/camera_container.gd

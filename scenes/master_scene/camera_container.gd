@@ -134,7 +134,6 @@ func _input(event):
 	# referenced
 	# https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html#mouse-motion
 	if event.is_action("pan"):
-		print('panning')
 		# record starting coordinates and start dragging
 		if not is_dragging and event.pressed:
 			is_dragging = true
