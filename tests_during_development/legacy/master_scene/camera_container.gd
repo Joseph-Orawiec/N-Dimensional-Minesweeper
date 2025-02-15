@@ -154,3 +154,12 @@ func _input(event):
 		
 		#update the new previous coordinates
 		previous_coordinates = event.position
+		
+	# im so tired of this bug
+	#if event.is_action_pressed("m1"): 
+		##inclusive on 0, exclusive on 720
+		##[0, size.y - 1]
+		#print("camera container", get_local_mouse_position(), " ", event.position)
+		#for subviewport_container in get_children():
+			#print(subviewport_container.position, " ", subviewport_container.size)
+		

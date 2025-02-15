@@ -22,6 +22,7 @@ var is_chording: bool = false
 var is_highlighted: bool = false
 var is_bomb: bool = false
 var has_started: bool = false
+var is_mouse_on_cell = false
 
 var pause = false
 
@@ -31,9 +32,11 @@ var pause = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var node = $Area2D
-	node.mouse_entered.connect(_on_mouse_entered)
-	node.mouse_exited.connect(_on_mouse_exited)
+	#node.input_event.connect(_on_area_2d_input_event)
+	#node.mouse_entered.connect(_on_mouse_entered)
+	#node.mouse_exited.connect(_on_mouse_exited)
 	set_process(false) 
+	
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -164,27 +167,83 @@ func chord_cancel():
 
 # just a function dedicated to handling the highlight node
 func toggle_highlight():
-	if is_highlighted:
-		cell_components['highlight'].visible = false
-		is_highlighted = false
-	else:
-		cell_components['highlight'].visible = true
-		is_highlighted = true
+	cell_components['highlight'].visible = not cell_components['highlight'].visible
+
 
 #region Mouse Detection
+# This bug is awful
+# if cells are off the window and offscreen off the viewports, the world "persists" outside of their contained subviewport
+# containers and even the godot window. It would pick up mouse input if it's overing to the left of the window
+# and cells would react, so this means mouse_entered/exit events cant be trusted and i need to write one myself
+# for the longest time i thought the subviewport containers were the issue
+
+# cells will not pickup on _input() so inputs being accepted somewhere else and i can't figure
+# out how to get that input (to determine when mouse exited)
+# so instead i'm going to call up to the MineField node to manage that
+
+# Handles what mouse_entered and mouse_exited would normally do but with the nuance of the multiple viewports
+func _on_area_2d_input_event(viewport, event, shape_idx):
+	# loop to get parent viewport, notable viewport is the mainviewport and not what we want
+	var viewport_container = get_parent()
+	while not viewport_container is SubViewportContainer:
+		viewport_container = viewport_container.get_parent()
+	
+	# verify if mouse input is WITHIN viewport bounds
+	if event is InputEventMouseButton or event is InputEventMouseMotion:
+		var is_within_x_bounds: bool = (viewport_container.position.x <= event.position.x) and (event.position.x < (viewport_container.position + viewport_container.size).x)
+		var is_within_y_bounds: bool = (viewport_container.position.y <= event.position.y) and (event.position.y < (viewport_container.position + viewport_container.size).y)
+		
+		if (is_within_x_bounds and is_within_y_bounds):
+			_on_mouse_entered()
+			
+func _input(event):
+	
+	if event is InputEventMouseButton or event is InputEventMouseMotion:
+		if not is_mouse_on_cell:
+			if get_global_rect().has_point(event.position):
+				_on_mouse_entered()
+		else:
+			if not get_global_rect().has_point(event.position):
+				_on_mouse_exited()
+	
+
+
+#func _unhandled_input(event):
+	#print("taking input")
+	#if event is InputEventMouseMotion:
+		#var new_position = event.velocity + event.position
+		#print(global_position)
+		#print(new_position)
+		#var is_within_x_bounds = (global_position.x <= new_position.x) and (new_position.x < (global_position + size).x)
+		#var is_within_y_bounds = (global_position.y <= new_position.y) and (new_position.y < (global_position + size).y)
+		#if (not (is_within_x_bounds and is_within_y_bounds)):
+			#_on_mouse_exited()
+
+# viewport check?
+	#var node = get_parent()
+	#while not node is SubViewportContainer:
+		#node = get_parent()
+
 # handles when the cursor enters and exits
 func _on_mouse_entered():
+	print(get_global_position(), " enter", pid)
 	# highlight should continue regardless
 	toggle_highlight()
 	toggle_highlighted.emit(pid)
+	
+	is_mouse_on_cell = true
+	
 	# start polling if mouse is on cell 
 	if not pause:
 		set_process(true)
 	
 func _on_mouse_exited():
+	print(get_global_position(), " exit", pid)
 	# highlight should continue regardless
 	toggle_highlight()
 	toggle_highlighted.emit(pid)
+	is_mouse_on_cell = false
+	
 	if not pause:
 		# Stop polling if mouse isn't on cell
 		set_process(false)

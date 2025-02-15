@@ -132,12 +132,9 @@ func win():
 
 #region Cell signal functions
 func _on_initialize(v):
-	var bombs = mines
-	
+	var bombs = mines	
 	print(v)
-	
-	
-	
+
 	while bombs > 0:
 		var k: Array[int] = node_dict.keys().pick_random()
 		
@@ -258,7 +255,6 @@ func _on_toggle_highlighted(v):
 		
 		if current_node != null: # if exists, switch_highlight
 			current_node.toggle_highlight()
-#endregion
 
 #region Helper functions
 # a helper function to jam all the .connects into so it's in one place
@@ -334,4 +330,5 @@ func add(v: Array[int], u) -> Array[int]:
 #endregion
 
 func _input(event):
-	pass
+	if event.is_action_pressed("m1"):
+		print("minefield ", event.position, " ", get_local_mouse_position())

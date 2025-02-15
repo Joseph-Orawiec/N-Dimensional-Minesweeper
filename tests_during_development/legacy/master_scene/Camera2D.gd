@@ -12,4 +12,7 @@ func _process(delta):
 
 func _input(event):
 	if event.is_action_pressed("m1"): 
-		print("camera ", get_local_mouse_position(), " ", event.position)
+		pass
+		#print("camera ", get_local_mouse_position(), " ", event.position)
+		
+		

@@ -22,5 +22,5 @@ func _process(delta):
 		
 		
 		var a = camera.temppp
-		print()
+		print(get_tree_string_pretty())
 	pass
