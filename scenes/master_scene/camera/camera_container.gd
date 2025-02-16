@@ -8,19 +8,16 @@ const zoom_max: float = pow(1.11, 21/2) #roughly 2.9915
 
 var cameras #placeholder to be initialized later
 var zoom1 #placeholder to be initialized later
-var camera_array = []
+var camera_dict = {}
 
 const viewport: PackedScene = preload("res://scenes/master_scene/camera/sub_viewport_container.tscn")
-
-var main_viewport = viewport.instantiate()
-var main_subviewport = main_viewport.get_child(0)
-var main_camera = main_subviewport.get_child(0)
+@onready var main_container = viewport.instantiate()
 
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	add_child(main_viewport)
+	add_child(main_container)
 	self.resized.connect(_on_resized)
 	pass
 	
@@ -31,7 +28,7 @@ func initialize(node, dimensions):
 	var d: int = len(dimensions)
 	
 	var n = 3 ** clampi(d - 2, 0, d)
-	columns = max(3 ** ((d - 1) / 2), 1)
+	#columns = max(3 ** ((d - 1) / 2), 1)
 	
 	# array of values in order of how far to shift
 	var positional_shift: Array[Array]
@@ -65,24 +62,101 @@ func initialize(node, dimensions):
 		
 		# repeat above but for veritcally
 		var current_shift_y = 0
-		if d >= i + 2: # might not be an even dimension, remember i is 0th index dimension so it's +2
-			current_shift_x = previous_shift[1] * dimensions[i+1] + (dimensions[i+1] - 1) * (i / 2) * node.margin
+		if d >= i + 2: # might not exist it's dimension, remember i is 0th index dimension so it's +2
+			current_shift_y = previous_shift[1] * dimensions[i+1] + (dimensions[i+1] - 1) * (i / 2) * node.margin
 		
 		positional_shift.append([current_shift_x, current_shift_y])
 	
-	# shift each camera the required amount
-	for i in range(1, n):
-		var node2 = main_viewport.duplicate()
-		node2.get_child(0).world_2d = main_subviewport.world_2d
-		
-		node2.get_child(0).get_child(0).position = main_camera.position + Vector2(positional_shift[0][0] * (i % 3), positional_shift[0][1] * (i / 3))
-		add_child(node2)
-		
-	print(positional_shift)
 	
+	# make all the viewports
+	var subviewport_0 = main_container
+	var id: Array[int] = []
+	id.resize(d - 2)
+	id.fill(0)
+	id[0] = -1
+	
+	#var main_container = GridContainer.new()
+	#add_child(main_container)
+	#main_container.columns = 3
+	#main_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+	#main_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
+	#main_container.add_theme_constant_override('h_separation', 0)
+	#main_container.add_theme_constant_override('v_separation', 0)
+	
+	# this is basically kind of combining both CameraBorders script and MineFields script
+	# it handles creating odd an even dimensions differently but then will create
+	# a node_dictionary style dictionary for the cameras which will ultimately
+	# make setting the cameras positions way easier
+	for i in range(1, d - 1):# i being the current dimension being worked on (within camera space)
+		var a = main_container
+		var old_container = main_container
+		if i % 2 == 1: # odd dimension
+			main_container = GridContainer.new()
+			add_child(main_container)
+			main_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+			main_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
+			main_container.add_theme_constant_override('h_separation', 0)
+			main_container.add_theme_constant_override('v_separation', 0)
+			main_container.columns = 3
+			
+			old_container.reparent(main_container)
+			
+			for j in range(2):
+				var new_container = old_container.duplicate()
+				add_child(new_container)
+				new_container.reparent(main_container)
+		else: # vertical dimension
+			main_container = GridContainer.new()
+			add_child(main_container)
+			main_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+			main_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
+			main_container.add_theme_constant_override('h_separation', 0)
+			main_container.add_theme_constant_override('v_separation', 0)
+			
+			old_container.reparent(main_container)
+			for j in range(2): 
+				var new_container = old_container.duplicate()
+				add_child(new_container)
+				new_container.reparent(main_container)
+	
+	# now borrowing from the  minefield part of the algorithm
+	var unvisited = main_container.get_children()
+	#keep searching within nested containers to find the viewports
+	while len(unvisited) != 0:
+		var current = unvisited.pop_front()
+		if current is SubViewportContainer:
+			# keep track of how many are visited
+			var index: int = 0
+			id[index] += 1
+			
+			# base 3 counter more or less
+			while id[index] == 3:
+				id[index] = 0
+				index += 1
+				id[index] += 1
+			camera_dict[id.duplicate()] = current.get_child(0).get_child(0)
+			# while i have it here, i need to do some other things too
+			current.get_child(0).world_2d = subviewport_0.get_child(0).world_2d
+			current.subviewport_0 = subviewport_0
+			current.master_container = self
+		else:
+			unvisited.append_array(current.get_children())
+			
 	cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
 	zoom1 = cameras[0].zoom
-	node.reparent(main_subviewport, true)
+	
+	#shift each camera the required amount
+	for i in camera_dict:
+		var delta_x = 0
+		var delta_y = 0
+		for j in range(0, len(i), 2):
+			delta_x += i[j] * positional_shift[j / 2][0]
+			if j + 1 < len(i):
+				delta_y += i[j + 1] * positional_shift[j / 2][1]
+		camera_dict[i].position = Vector2(delta_x, delta_y)
+		
+	# finally reparent the world
+	node.reparent(subviewport_0.get_child(0), true)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 # mastee

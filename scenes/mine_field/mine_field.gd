@@ -329,6 +329,6 @@ func add(v: Array[int], u) -> Array[int]:
 #endregion
 
 func _input(event):
-	#if event.is_action_pressed("m1"):
-		#print("minefield ", event.position, " ", get_local_mouse_position())
+	if event.is_action_pressed("m1"):
+		print("minefield ", event.position, " ", get_local_mouse_position())
 	pass
