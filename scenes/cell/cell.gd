@@ -197,7 +197,6 @@ func _on_area_2d_input_event(viewport, event, shape_idx):
 			_on_mouse_entered()
 			
 func _input(event):
-	
 	if event is InputEventMouseButton or event is InputEventMouseMotion:
 		if not is_mouse_on_cell:
 			if get_global_rect().has_point(event.position):
@@ -205,28 +204,9 @@ func _input(event):
 		else:
 			if not get_global_rect().has_point(event.position):
 				_on_mouse_exited()
-	
-
-
-#func _unhandled_input(event):
-	#print("taking input")
-	#if event is InputEventMouseMotion:
-		#var new_position = event.velocity + event.position
-		#print(global_position)
-		#print(new_position)
-		#var is_within_x_bounds = (global_position.x <= new_position.x) and (new_position.x < (global_position + size).x)
-		#var is_within_y_bounds = (global_position.y <= new_position.y) and (new_position.y < (global_position + size).y)
-		#if (not (is_within_x_bounds and is_within_y_bounds)):
-			#_on_mouse_exited()
-
-# viewport check?
-	#var node = get_parent()
-	#while not node is SubViewportContainer:
-		#node = get_parent()
 
 # handles when the cursor enters and exits
 func _on_mouse_entered():
-	print(get_global_position(), " enter", pid)
 	# highlight should continue regardless
 	toggle_highlight()
 	toggle_highlighted.emit(pid)
@@ -238,7 +218,6 @@ func _on_mouse_entered():
 		set_process(true)
 	
 func _on_mouse_exited():
-	print(get_global_position(), " exit", pid)
 	# highlight should continue regardless
 	toggle_highlight()
 	toggle_highlighted.emit(pid)

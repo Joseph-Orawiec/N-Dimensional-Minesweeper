@@ -80,8 +80,8 @@ func new_game(dimensions: Array[int], m: int):
 			# multiplied by 1 minus the dimension size (like a fencepost)
 			new_grid_container.size = main_grid_container.size * Vector2(d, 1) + Vector2(((dimension - 1) / 2) * margin, 0) * (d - 1)
 		else:
-			new_grid_container.add_theme_constant_override('v_separation', ((dimension_index) / 2) * margin)
-			new_grid_container.size = main_grid_container.size * Vector2(1, d) + Vector2(0, ((dimension_index) / 2) * margin) * (d - 1)
+			new_grid_container.add_theme_constant_override('v_separation', ((dimension - 1) / 2) * margin)
+			new_grid_container.size = main_grid_container.size * Vector2(1, d) + Vector2(0, ((dimension - 1) / 2) * margin) * (d - 1)
 			
 		
 		# It's always the case the first cell/row/3d layer/ ... / is always done
@@ -133,7 +133,6 @@ func win():
 #region Cell signal functions
 func _on_initialize(v):
 	var bombs = mines	
-	print(v)
 
 	while bombs > 0:
 		var k: Array[int] = node_dict.keys().pick_random()
@@ -330,5 +329,6 @@ func add(v: Array[int], u) -> Array[int]:
 #endregion
 
 func _input(event):
-	if event.is_action_pressed("m1"):
-		print("minefield ", event.position, " ", get_local_mouse_position())
+	#if event.is_action_pressed("m1"):
+		#print("minefield ", event.position, " ", get_local_mouse_position())
+	pass

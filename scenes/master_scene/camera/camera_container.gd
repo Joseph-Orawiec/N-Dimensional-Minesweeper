@@ -8,56 +8,81 @@ const zoom_max: float = pow(1.11, 21/2) #roughly 2.9915
 
 var cameras #placeholder to be initialized later
 var zoom1 #placeholder to be initialized later
+var camera_array = []
+
+const viewport: PackedScene = preload("res://scenes/master_scene/camera/sub_viewport_container.tscn")
+
+var main_viewport = viewport.instantiate()
+var main_subviewport = main_viewport.get_child(0)
+var main_camera = main_subviewport.get_child(0)
 
 
-@onready var main_viewport = $SubViewportContainer
-@onready var main_subiewport = $SubViewportContainer/SubViewport
-@onready var main_camera = $SubViewportContainer/SubViewport/Camera2D
-
-var temppp = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	temppp.append([main_viewport, main_subiewport, main_camera])
+	add_child(main_viewport)
+	self.resized.connect(_on_resized)
 	pass
 	
+func _on_resized():
+	get_child(0).size = size
 
 func initialize(node, dimensions):
 	var d: int = len(dimensions)
 	
 	var n = 3 ** clampi(d - 2, 0, d)
-	columns = n
+	columns = max(3 ** ((d - 1) / 2), 1)
 	
-	var arr: Array[int]
+	# array of values in order of how far to shift
+	var positional_shift: Array[Array]
 	
 	# calculate how far each camera needs to be
-	var horizontal_cells = dimensions[0]
-	var vertical_cells = dimensions[1]
+	var horizontal_cells = dimensions[0] * 50
+	var vertical_cells = null
+	var horizontal_shift = null
+	var vertical_shift = null
+
+	# coding this inductively so i need to setup the base case and all that
+	# i would use a try exception block here but that doesnt exist
+	if d >= 2:
+		vertical_cells = dimensions[1] * 50 
+	if d >= 3:
+		horizontal_shift = horizontal_cells + node.margin
+		
+		positional_shift = [[horizontal_shift, 0]] # setups up base case
+	if d >= 4:
+		vertical_shift = vertical_cells + node.margin
+		
+		positional_shift[0][1] = vertical_shift # sets up base case, but vertically
 	
-	var total_horizontal = horizontal_cells * 50
-	var total_vertical = vertical_cells * 50
+	# i is for dimensions, but indexed at 0, so starts at the 5th dimension
+	# this tackles dimensions 2 at a time and so the base case was the 3rd and 4th dimension
+	for i in range(4, d, 2):
+		var previous_shift = positional_shift[i/2 - 2]
+		var current_shift_x = previous_shift[0] * dimensions[i] + (dimensions[i] - 1) * (i / 2) * node.margin
+		# how wide the previous dimension made it * how many times it'll be copies +  margin 
+		# the inbetweens (fencepost problem) * how many times the amrgin is repeated 
+		
+		# repeat above but for veritcally
+		var current_shift_y = 0
+		if d >= i + 2: # might not be an even dimension, remember i is 0th index dimension so it's +2
+			current_shift_x = previous_shift[1] * dimensions[i+1] + (dimensions[i+1] - 1) * (i / 2) * node.margin
+		
+		positional_shift.append([current_shift_x, current_shift_y])
 	
-	for i in range(2, d):
-		if i % 2 == 0: #odd dimension
-			total_horizontal = total_horizontal + node.margin
-			arr.append(total_horizontal)
-		else:
-			total_vertical = total_vertical + node.margin
-			arr.append(total_vertical)
-	
+	# shift each camera the required amount
 	for i in range(1, n):
 		var node2 = main_viewport.duplicate()
-		node2.get_child(0).world_2d = main_subiewport.world_2d
-		node2.get_child(0).get_child(0).position = main_camera.position + Vector2(total_horizontal, 0) * i
+		node2.get_child(0).world_2d = main_subviewport.world_2d
+		
+		node2.get_child(0).get_child(0).position = main_camera.position + Vector2(positional_shift[0][0] * (i % 3), positional_shift[0][1] * (i / 3))
 		add_child(node2)
 		
-		temppp.append([node2, node2.get_child(0), node2.get_child(0).get_child(0)])
+	print(positional_shift)
 	
 	cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
 	zoom1 = cameras[0].zoom
-
-	
-	node.reparent(main_subiewport, true)
+	node.reparent(main_subviewport, true)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 # mastee
@@ -89,7 +114,6 @@ func _input(event):
 	var zoom2: Vector2 = Vector2.ONE # to be determined later
 	
 	if event.is_action_pressed('zoom_in'):
-		
 		# new zoom amount
 		zoom2 = (zoom1.x * sqrt(pa)) * Vector2(1, 1)
 		
@@ -153,12 +177,3 @@ func _input(event):
 		
 		#update the new previous coordinates
 		previous_coordinates = event.position
-		
-	# im so tired of this bug
-	#if event.is_action_pressed("m1"): 
-		##inclusive on 0, exclusive on 720
-		##[0, size.y - 1]
-		#print("camera container", get_local_mouse_position(), " ", event.position)
-		#for subviewport_container in get_children():
-			#print(subviewport_container.position, " ", subviewport_container.size)
-		
