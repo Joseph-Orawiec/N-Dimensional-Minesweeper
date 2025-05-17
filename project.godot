@@ -77,6 +77,10 @@ reposition_cameras={
 ]
 }
 
+[memory]
+
+limits/message_queue/max_size_mb=1024
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

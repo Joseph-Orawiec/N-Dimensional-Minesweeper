@@ -12,6 +12,7 @@ var camera_dict = {}
 
 const viewport: PackedScene = preload("res://scenes/master_scene/camera/sub_viewport_container.tscn")
 @onready var main_container = viewport.instantiate()
+var world = null
 
 
 
@@ -25,6 +26,7 @@ func _on_resized():
 	get_child(0).size = size
 
 func initialize(node, dimensions):
+	world = node
 	var d: int = len(dimensions)
 	
 	var n = 3 ** clampi(d - 2, 0, d)
@@ -158,15 +160,23 @@ func initialize(node, dimensions):
 	# finally reparent the world
 	node.reparent(subviewport_0.get_child(0), true)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-# mastee
-func _process(delta):
-	pass
+#func multicam_off():
+	#world.reparent(self)
+	#main_container.queue_free()
+	#main_container = viewport.instantiate()
+	#add_child(main_container)
+	#main_container.subviewport_0 = main_container.get_child(0)
+	#main_container.master_container = self
+	#world.reparent(main_container.get_child(0))
+	#
+	#cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
+	#zoom1 = cameras[0].zoom
 	
-
 func vector_mod(u, v):
 	return Vector2(fposmod(u.x, v.x), fposmod(u.y, v.y))
 
+
+# handles moving all cameras at once
 func _input(event):
 	# Zoom based on cursor position
 	# https://www.desmos.com/calculator/b7ufjha1ss
