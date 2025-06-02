@@ -22,6 +22,10 @@ const viewport: PackedScene = preload("res://scenes/master_scene/camera/sub_view
 func _ready():
 	add_child(main_container)
 	self.resized.connect(_on_resized)
+	
+	# set's master_container and subviewport_original for all future subviewports via static variable
+	main_container.master_container = self
+	main_container.subviewport_0 = main_container
 	pass
 	
 func _on_resized():
@@ -33,9 +37,9 @@ func initialize(node, d):
 	if len(dimensions) >= 3:
 		make_multicam()
 	else:
-		cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
+		cameras = get_tree().get_nodes_in_group("cameras")
 		zoom1 = cameras[0].zoom
-		#main_container.master_container = self
+		world.reparent(main_container.get_child(0), true)
 
 func make_multicam():
 	var d: int = len(dimensions)
@@ -88,53 +92,113 @@ func make_multicam():
 	id.fill(0)
 	id[0] = -1
 	
-	# set's master_container and subviewport_original for all future subviewports via static variable
-	main_container.master_container = self
-	main_container.subviewport_0 = subviewport_0
-	
-	#var main_container = GridContainer.new()
-	#add_child(main_container)
-	#main_container.columns = 3
-	#main_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
-	#main_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
-	#main_container.add_theme_constant_override('h_separation', 0)
-	#main_container.add_theme_constant_override('v_separation', 0)
 	
 	# this is basically kind of combining both CameraBorders script and MineFields script
 	# it handles creating odd an even dimensions differently but then will create
-	# a node_dictionary style dictionary for the cameras which will ultimately
+	# a dictionary (ID: CAMERA) for the cameras which will ultimately
 	# make setting the cameras positions way easier
 	for i in range(1, d - 1):# i being the current dimension being worked on (within camera space)
 		var a = main_container
 		var old_container = main_container
+		
+		main_container = GridContainer.new()
+		add_child(main_container)
+		main_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
+		main_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
+		main_container.add_theme_constant_override('h_separation', 0)
+		main_container.add_theme_constant_override('v_separation', 0)
 		if i % 2 == 1: # odd dimension
-			main_container = GridContainer.new()
-			add_child(main_container)
-			main_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
-			main_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
-			main_container.add_theme_constant_override('h_separation', 0)
-			main_container.add_theme_constant_override('v_separation', 0)
-			main_container.columns = 3
-			
-			old_container.reparent(main_container) # the only difference
-			
-			for j in range(2):
-				var new_container = old_container.duplicate()
-				add_child(new_container)
-				new_container.reparent(main_container)
-		else: # vertical dimension
-			main_container = GridContainer.new()
-			add_child(main_container)
-			main_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
-			main_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
-			main_container.add_theme_constant_override('h_separation', 0)
-			main_container.add_theme_constant_override('v_separation', 0)
-			
-			old_container.reparent(main_container)
-			for j in range(2): 
-				var new_container = old_container.duplicate()
-				add_child(new_container)
-				new_container.reparent(main_container)
+			main_container.columns = 3 
+			# if it's an even dimension, columns doesn't need to be adjusted
+		
+		old_container.reparent(main_container)
+		for j in range(2): 
+			var new_container = old_container.duplicate()
+			add_child(new_container)
+			new_container.reparent(main_container)
+	
+	# the scene tree looks something like this with 4d minesweeper
+	# there's 9 cameras because we need to see the adjacent up/down left/right
+	# TL TM TR
+	# ML MM MR
+	# BL BM BR
+	#
+	# if we were to give them coordinates, it turns them into
+	#
+	# [0, 0] [1, 0] [2, 0]
+	# [0, 1] [1, 1] [2, 1]
+	# [0, 2] [1, 2] [2, 2]
+	#
+	# and each camera with such an ID is located at such positions in the tree
+	# because of the process used to create the camera configuration and how grid containers are setup
+	#
+	#CameraContainer (master_container)
+	#┖╴@GridContainer@26 (just used to contain all the sub grid containers)
+		#┠╴@GridContainer@23 [?, 0]
+		#┃  ┠╴SubViewportContainer (the original) [0, 0]
+		#┃  ┠╴@SubViewportContainer@24 [1, 0]
+		#┃  ┖╴@SubViewportContainer@25 [2, 0]
+		#┠╴_GridContainer_23 [?, 1]
+		#┃  ┠╴SubViewportContainer [0, 1]
+		#┃  ┠╴_SubViewportContainer_24 [1, 1]
+		#┃  ┖╴_SubViewportContainer_25 [2, 1]
+		#┖╴@GridContainer@27 [?, 2]
+			#┠╴SubViewportContainer [0, 2]
+			#┠╴_SubViewportContainer_24 [1, 2]
+			#┖╴_SubViewportContainer_25 [2, 2]
+	#
+	# which means a base 3 counter when going from top to bottom is the solution
+	#
+	#with a 5d board the coordinates of the camera will be [1-3]
+	# [0, 0, 0] [1, 0, 0] [2, 0, 0]   [0, 0, 1] [1, 0, 1] [2, 0, 1]   [0, 0, 2] [1, 0, 2] [2, 0, 2]
+	# [0, 1, 0] [1, 1, 0] [2, 1, 0]   [0, 1, 1] [1, 1, 1] [2, 1, 1]   [0, 1, 2] [1, 1, 2] [2, 1, 2]
+	# [0, 2, 0] [1, 2, 0] [2, 2, 0]   [0, 2, 1] [1, 2, 1] [2, 2, 1]   [0, 2, 2] [1, 2, 2] [2, 2, 2]
+	#
+	# which should be very familiar to the ID system used for the mines
+	#
+	#CameraContainer (master container)
+		#┖╴@GridContainer@38 
+		   #┠╴[?, ?, 0]
+		   #┃  ┠╴[?, 0, 0]
+		   #┃  ┃  ┠╴[0, 0, 0]
+		   #┃  ┃  ┠╴[1, 0, 0]
+		   #┃  ┃  ┖╴[2, 0, 0]
+		   #┃  ┠╴[?, 1, 0]
+		   #┃  ┃  ┠╴[0, 1, 0]
+		   #┃  ┃  ┠╴[1, 1, 0]
+		   #┃  ┃  ┖╴[2, 1, 0]
+		   #┃  ┖╴[?, 2, 0]
+		   #┃     ┠╴[0, 2, 0]
+		   #┃     ┠╴[1, 2, 0]
+		   #┃     ┖╴[1, 2, 0]
+		   #┠╴[?, ?, 1]
+		   #┃  ┠╴[?, 0, 1]
+		   #┃  ┃  ┠╴[0, 0, 1]
+		   #┃  ┃  ┠╴[1, 0, 1]
+		   #┃  ┃  ┖╴[2, 0, 1]
+		   #┃  ┠╴[?, 1, 1]
+		   #┃  ┃  ┠╴[0, 1, 1]
+		   #┃  ┃  ┠╴[1, 1, 1]
+		   #┃  ┃  ┖╴[2, 1, 1]
+		   #┃  ┖╴[?, 2, 1]
+		   #┃     ┠╴[0, 2, 1]
+		   #┃     ┠╴[1, 2, 1]
+		   #┃     ┖╴[1, 2, 1]
+		   #┖╴[?, ?, 2]
+			  #┠╴[?, 0, 2]
+			  #┃  ┠╴[0, 0, 2]
+			  #┃  ┠╴[1, 0, 2]
+			  #┃  ┖╴[2, 0, 2]
+			  #┠╴[?, 1, 2]
+			  #┃  ┠╴[0, 1, 2]
+			  #┃  ┠╴[1, 1, 2]
+			  #┃  ┖╴[2, 1, 2]
+			  #┖╴[?, 2, 2]
+				 #┠╴[0, 2, 2]
+				 #┠╴[1, 2, 2]
+				 #┖╴[2, 2, 2]
+	
+	# this also explains how the field is generated since i didn't explain it there
 	
 	# now borrowing from the  minefield part of the algorithm
 	var unvisited = main_container.get_children()
@@ -188,11 +252,11 @@ func make_multicam():
 func vector_mod(u, v):
 	return Vector2(fposmod(u.x, v.x), fposmod(u.y, v.y))
 
-func _input(event):
-	multicam_input(event)
+#func _input(event):
+	#multicam_input(event)
 
 # handles moving all cameras at once
-func multicam_input(event):
+func _input(event):
 	# Zoom based on cursor position
 	# https://www.desmos.com/calculator/b7ufjha1ss
 	# I couldn't find anything online that actually helped, so i did the derivation myself
@@ -272,6 +336,7 @@ func multicam_input(event):
 		# Also scale it by the reciprocal of how much we're zoomed in (if zoomed in further, reduce the amount of movement)
 		
 		for camera in cameras:
+			print((event.position - previous_coordinates) * -1 * (1 / zoom1.x), 'delta')
 			camera.position += (event.position - previous_coordinates) * -1 * (1 / zoom1.x)
 		
 		#update the new previous coordinates

@@ -1,6 +1,6 @@
 extends SubViewportContainer
 
-static var subviewport_0 # the original viewport
+static var subviewport_0 # the original viewport containing the world
 static var master_container # the camera container
 
 # Called when the node enters the scene tree for the first time.
@@ -27,20 +27,12 @@ func _input(event):
 		var is_within_y_bounds: bool = (get_global_position().y <= event.position.y) and (event.position.y < (get_global_position() + size).y)
 		
 		if (is_within_x_bounds and is_within_y_bounds):
-			if event.is_action_pressed("m1"): 		
-				print("SUB ", get_local_mouse_position(), " ", event.position, " ", position, get_global_position())
-				print("Subs camera ", get_child(0).get_child(0).position)
+			# passes input to handle camera related logic
 			master_container._input(event)
+			
 			# shift the event position by the subviewport container and by the camera within the subviewport container
 			var camera = self.get_child(0).get_child(0)
 			event.position = (event.position - get_global_position()) * (1/camera.zoom.x) + camera.position
 			
+			# passes input to handle game logic
 			subviewport_0.get_child(0).push_input(event, false)
-			
-			if event.is_action_pressed("m1"): 		
-				print("SUB post process ", get_local_mouse_position(), " ", event.position, " ", position)
-			
-		
-	
-		
-	pass

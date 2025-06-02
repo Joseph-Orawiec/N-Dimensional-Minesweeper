@@ -10,8 +10,8 @@ extends CanvasLayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var board: Array[int] = [3, 3, 3, 3, 3]
-	world.new_game(board, 100)
+	var board: Array[int] = [10, 10]
+	world.new_game(board, 3)
 	print("Initializing world")
 	camera.initialize(world, board)
 	camera_borders.initialize(len(board))
