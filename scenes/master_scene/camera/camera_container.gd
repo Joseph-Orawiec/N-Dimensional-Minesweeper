@@ -9,10 +9,12 @@ const zoom_max: float = pow(1.11, 21/2) #roughly 2.9915
 var cameras #placeholder to be initialized later
 var zoom1 #placeholder to be initialized later
 var camera_dict = {}
+var world = null
+var dimensions = null
+var use_multicam = false
 
 const viewport: PackedScene = preload("res://scenes/master_scene/camera/sub_viewport_container.tscn")
 @onready var main_container = viewport.instantiate()
-var world = null
 
 
 
@@ -25,8 +27,17 @@ func _ready():
 func _on_resized():
 	get_child(0).size = size
 
-func initialize(node, dimensions):
+func initialize(node, d):
 	world = node
+	dimensions = d
+	if len(dimensions) >= 3:
+		make_multicam()
+	else:
+		cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
+		zoom1 = cameras[0].zoom
+		#main_container.master_container = self
+
+func make_multicam():
 	var d: int = len(dimensions)
 	
 	var n = 3 ** clampi(d - 2, 0, d)
@@ -46,11 +57,11 @@ func initialize(node, dimensions):
 	if d >= 2:
 		vertical_cells = dimensions[1] * 50 
 	if d >= 3:
-		horizontal_shift = horizontal_cells + node.margin
+		horizontal_shift = horizontal_cells + world.margin
 		
 		positional_shift = [[horizontal_shift, 0]] # setups up base case
 	if d >= 4:
-		vertical_shift = vertical_cells + node.margin
+		vertical_shift = vertical_cells + world.margin
 		
 		positional_shift[0][1] = vertical_shift # sets up base case, but vertically
 	
@@ -58,14 +69,14 @@ func initialize(node, dimensions):
 	# this tackles dimensions 2 at a time and so the base case was the 3rd and 4th dimension
 	for i in range(4, d, 2):
 		var previous_shift = positional_shift[i/2 - 2]
-		var current_shift_x = previous_shift[0] * dimensions[i] + (dimensions[i] - 1) * (i / 2) * node.margin
+		var current_shift_x = previous_shift[0] * dimensions[i] + (dimensions[i] - 1) * (i / 2) * world.margin
 		# how wide the previous dimension made it * how many times it'll be copies +  margin 
 		# the inbetweens (fencepost problem) * how many times the amrgin is repeated 
 		
 		# repeat above but for veritcally
 		var current_shift_y = 0
 		if d >= i + 2: # might not exist it's dimension, remember i is 0th index dimension so it's +2
-			current_shift_y = previous_shift[1] * dimensions[i+1] + (dimensions[i+1] - 1) * (i / 2) * node.margin
+			current_shift_y = previous_shift[1] * dimensions[i+1] + (dimensions[i+1] - 1) * (i / 2) * world.margin
 		
 		positional_shift.append([current_shift_x, current_shift_y])
 	
@@ -76,6 +87,10 @@ func initialize(node, dimensions):
 	id.resize(d - 2)
 	id.fill(0)
 	id[0] = -1
+	
+	# set's master_container and subviewport_original for all future subviewports via static variable
+	main_container.master_container = self
+	main_container.subviewport_0 = subviewport_0
 	
 	#var main_container = GridContainer.new()
 	#add_child(main_container)
@@ -101,7 +116,7 @@ func initialize(node, dimensions):
 			main_container.add_theme_constant_override('v_separation', 0)
 			main_container.columns = 3
 			
-			old_container.reparent(main_container)
+			old_container.reparent(main_container) # the only difference
 			
 			for j in range(2):
 				var new_container = old_container.duplicate()
@@ -137,10 +152,8 @@ func initialize(node, dimensions):
 				index += 1
 				id[index] += 1
 			camera_dict[id.duplicate()] = current.get_child(0).get_child(0)
-			# while i have it here, i need to do some other things too
+			# while i have it here, i need to do this
 			current.get_child(0).world_2d = subviewport_0.get_child(0).world_2d
-			current.subviewport_0 = subviewport_0
-			current.master_container = self
 		else:
 			unvisited.append_array(current.get_children())
 			
@@ -158,7 +171,7 @@ func initialize(node, dimensions):
 		camera_dict[i].position = Vector2(delta_x, delta_y)
 		
 	# finally reparent the world
-	node.reparent(subviewport_0.get_child(0), true)
+	world.reparent(subviewport_0.get_child(0), true)
 
 #func multicam_off():
 	#world.reparent(self)
@@ -175,9 +188,11 @@ func initialize(node, dimensions):
 func vector_mod(u, v):
 	return Vector2(fposmod(u.x, v.x), fposmod(u.y, v.y))
 
+func _input(event):
+	multicam_input(event)
 
 # handles moving all cameras at once
-func _input(event):
+func multicam_input(event):
 	# Zoom based on cursor position
 	# https://www.desmos.com/calculator/b7ufjha1ss
 	# I couldn't find anything online that actually helped, so i did the derivation myself

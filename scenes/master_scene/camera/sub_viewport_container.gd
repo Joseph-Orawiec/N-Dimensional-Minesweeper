@@ -1,12 +1,15 @@
 extends SubViewportContainer
 
-var subviewport_0
-var master_container
+static var subviewport_0 # the original viewport
+static var master_container # the camera container
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.resized.connect(_on_resized)
+	
+	print(master_container, "master_container")
 	pass # Replace with function body.
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -31,9 +34,8 @@ func _input(event):
 			# shift the event position by the subviewport container and by the camera within the subviewport container
 			var camera = self.get_child(0).get_child(0)
 			event.position = (event.position - get_global_position()) * (1/camera.zoom.x) + camera.position
-			#event.position = event.position * (1/camera.zoom.x) + camera.position
+			
 			subviewport_0.get_child(0).push_input(event, false)
-			#get_child(0).push_input(event)
 			
 			if event.is_action_pressed("m1"): 		
 				print("SUB post process ", get_local_mouse_position(), " ", event.position, " ", position)
