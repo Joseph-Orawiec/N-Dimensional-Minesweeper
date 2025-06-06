@@ -6,8 +6,6 @@ static var master_container # the camera container
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.resized.connect(_on_resized)
-	
-	print(master_container, "master_container")
 	pass # Replace with function body.
 	
 

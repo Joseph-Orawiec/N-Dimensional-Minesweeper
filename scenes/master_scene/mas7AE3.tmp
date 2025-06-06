@@ -21,7 +21,6 @@ script = ExtResource("2_nnig0")
 [node name="MineField" parent="." instance=ExtResource("6_ua528")]
 
 [node name="CameraBorders" type="GridContainer" parent="."]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

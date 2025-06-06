@@ -1,9 +1,8 @@
-res://scenes/master_scene/master_scene.tscn
+res://scenes/master_scene/camera/sub_viewport_container.tscn
 res://scenes/master_scene/camera/sub_viewport_container.gd
 res://scenes/mine_field/mine_field.gd
-res://scenes/master_scene/camera/sub_viewport_container.tscn
+res://scenes/master_scene/camera/camera_container.gd
+res://scenes/master_scene/master_scene.tscn
 res://scenes/cell/cell.tscn
 res://scenes/mine_field/mine_field.tscn
-res://scenes/master_scene/camera_borders/nine_patch_rect.tscn
-res://scenes/master_scene/camera/camera_container.gd
 res://scenes/master_scene/master_scene.gd

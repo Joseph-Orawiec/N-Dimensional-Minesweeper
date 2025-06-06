@@ -3,8 +3,8 @@ extends GridContainer
 var previous_coordinates: Vector2
 var is_dragging: bool
 const pa: float = 1.11 # Area proportionality constant
-const zoom_min: float = pow(1.11, -22/2) #roughly .3
-const zoom_max: float = pow(1.11, 21/2) #roughly 2.9915
+const zoom_min: float = pow(1.11, -22/2.0) #roughly .3
+const zoom_max: float = pow(1.11, 21/2.0) #roughly 2.9915
 
 var cameras #placeholder to be initialized later
 var zoom1 #placeholder to be initialized later
@@ -15,8 +15,6 @@ var use_multicam = false
 
 const viewport: PackedScene = preload("res://scenes/master_scene/camera/sub_viewport_container.tscn")
 @onready var main_container = viewport.instantiate()
-
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -34,14 +32,16 @@ func _on_resized():
 func initialize(node, d):
 	world = node
 	dimensions = d
-	if len(dimensions) >= 3:
-		make_multicam()
-	else:
-		cameras = get_tree().get_nodes_in_group("cameras")
-		zoom1 = cameras[0].zoom
-		world.reparent(main_container.get_child(0), true)
+	
+	
+	cameras = get_tree().get_nodes_in_group("cameras")
+	zoom1 = cameras[0].zoom
+	world.reparent(main_container.get_child(0), true)
 
-func make_multicam():
+func multicam_on():
+	#make sure not to duplicate the world
+	world.reparent(self)
+	
 	var d: int = len(dimensions)
 	
 	var n = 3 ** clampi(d - 2, 0, d)
@@ -92,13 +92,11 @@ func make_multicam():
 	id.fill(0)
 	id[0] = -1
 	
-	
 	# this is basically kind of combining both CameraBorders script and MineFields script
 	# it handles creating odd an even dimensions differently but then will create
 	# a dictionary (ID: CAMERA) for the cameras which will ultimately
 	# make setting the cameras positions way easier
 	for i in range(1, d - 1):# i being the current dimension being worked on (within camera space)
-		var a = main_container
 		var old_container = main_container
 		
 		main_container = GridContainer.new()
@@ -224,6 +222,7 @@ func make_multicam():
 	cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
 	zoom1 = cameras[0].zoom
 	
+	
 	#shift each camera the required amount
 	for i in camera_dict:
 		var delta_x = 0
@@ -232,23 +231,72 @@ func make_multicam():
 			delta_x += i[j] * positional_shift[j / 2][0]
 			if j + 1 < len(i):
 				delta_y += i[j + 1] * positional_shift[j / 2][1]
-		camera_dict[i].position = Vector2(delta_x, delta_y)
+		camera_dict[i].position += Vector2(delta_x, delta_y)
 		
 	# finally reparent the world
 	world.reparent(subviewport_0.get_child(0), true)
-
-#func multicam_off():
-	#world.reparent(self)
-	#main_container.queue_free()
-	#main_container = viewport.instantiate()
-	#add_child(main_container)
-	#main_container.subviewport_0 = main_container.get_child(0)
-	#main_container.master_container = self
-	#world.reparent(main_container.get_child(0))
-	#
-	#cameras = get_tree().get_nodes_in_group("cameras") #placeholder to be initialized later
-	#zoom1 = cameras[0].zoom
 	
+	# maintain viewport position
+	id.fill(1)
+	
+	var past_position: Vector2 = camera_dict[id].get_global_position()
+	print(past_position, id)
+	
+	var even_dimensions = len(dimensions) / 2 - 1
+	var odd_dimensions = (len(dimensions) - 1) / 2
+	var viewport_position = Vector2(get_viewport_rect().size.x / (3 ** odd_dimensions) * (3 ** odd_dimensions / 2), get_viewport_rect().size.y / (3 ** even_dimensions) * (3 ** even_dimensions / 2))
+	
+	#print(past_position)
+	var delta = viewport_position + past_position
+	
+	#for c in cameras:
+		#c.position += delta
+	# maintain viewport position
+
+func multicam_off():
+	# for later
+	var id: Array[int] = []
+	id.resize(len(dimensions) - 2)
+	id.fill(1)
+	
+	var past_position: Vector2 = camera_dict[id].position
+	
+	# delete and remove 
+	main_container.queue_free()
+	for c in cameras:
+		c.remove_from_group("cameras")
+	
+	# setup 1st cam
+	main_container = viewport.instantiate()
+	
+	add_child(main_container)
+	self.resized.connect(_on_resized)
+	
+	main_container.master_container = self
+	main_container.subviewport_0 = main_container
+	
+	world.reparent(main_container.get_child(0))
+	
+	var camera_dict = {}
+	
+	cameras = get_tree().get_nodes_in_group("cameras")
+	zoom1 = cameras[0].zoom
+	
+	world.reparent(self)
+	
+	# maintain middle viewport's view
+	
+	var even_dimensions = len(dimensions) / 2 - 1
+	var odd_dimensions = (len(dimensions) - 1) / 2
+	
+	var viewport_position = Vector2(get_viewport_rect().size.x / (3 ** odd_dimensions) * (3 ** odd_dimensions / 2), get_viewport_rect().size.y / (3 ** even_dimensions) * (3 ** even_dimensions / 2))
+	viewport_position = viewport_position.round()
+	cameras[0].position = past_position - viewport_position
+	
+	
+	world.reparent(main_container.get_child(0))
+	
+
 func vector_mod(u, v):
 	return Vector2(fposmod(u.x, v.x), fposmod(u.y, v.y))
 
@@ -336,7 +384,6 @@ func _input(event):
 		# Also scale it by the reciprocal of how much we're zoomed in (if zoomed in further, reduce the amount of movement)
 		
 		for camera in cameras:
-			print((event.position - previous_coordinates) * -1 * (1 / zoom1.x), 'delta')
 			camera.position += (event.position - previous_coordinates) * -1 * (1 / zoom1.x)
 		
 		#update the new previous coordinates

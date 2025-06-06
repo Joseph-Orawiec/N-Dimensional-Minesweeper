@@ -3,6 +3,8 @@ extends GridContainer
 const border: PackedScene = preload("res://scenes/master_scene/camera_borders/nine_patch_rect.tscn")
 @onready var main_container = border.instantiate()
 
+var d: int
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_child(main_container)
@@ -13,7 +15,12 @@ func _ready():
 func _process(delta):
 	pass
 	
-func initialize(d):
+
+func initialize(dimension): 
+	d = dimension
+	make_borders()
+
+func make_borders():
 	# initializes camera borders in the same way it initializes the board
 	# grid containers inside grid containers
 	

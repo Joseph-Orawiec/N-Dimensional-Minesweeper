@@ -10,16 +10,20 @@ extends CanvasLayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var board: Array[int] = [10, 10]
+	var board: Array[int] = [3, 3, 3, 3, 3]
 	world.new_game(board, 3)
 	print("Initializing world")
 	camera.initialize(world, board)
 	camera_borders.initialize(len(board))
-	#camera.multicam_off()
 	
+	#camera.make_multicam()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if Input.is_action_just_pressed("space"):
-		var a = camera.cameras
-	pass
+		camera.multicam_off()
+		camera_borders.hide()
+	if Input.is_action_just_pressed("reposition_cameras"):
+		camera.multicam_on()
+		camera_borders.show()
+
