@@ -44,22 +44,21 @@ func multicam_on():
 	
 	var d: int = len(dimensions)
 	
-	var n = 3 ** clampi(d - 2, 0, d)
-	#columns = max(3 ** ((d - 1) / 2), 1)
-	
 	# array of values in order of how far to shift
+	# 0: 3st and 4ond | 1: 5rd and 6th | 2: 7th and 8th
 	var positional_shift: Array[Array]
 	
+	
+	# coding this inductively so i need to setup the base case and all that
 	# calculate how far each camera needs to be
-	var horizontal_cells = dimensions[0] * 50
+	var horizontal_cells = dimensions[0] * world.cell_size
 	var vertical_cells = null
 	var horizontal_shift = null
 	var vertical_shift = null
-
-	# coding this inductively so i need to setup the base case and all that
-	# i would use a try exception block here but that doesnt exist
+	
+	# would use try except blocks here but instead
 	if d >= 2:
-		vertical_cells = dimensions[1] * 50 
+		vertical_cells = dimensions[1] * world.cell_size
 	if d >= 3:
 		horizontal_shift = horizontal_cells + world.margin
 		
@@ -72,15 +71,23 @@ func multicam_on():
 	# i is for dimensions, but indexed at 0, so starts at the 5th dimension
 	# this tackles dimensions 2 at a time and so the base case was the 3rd and 4th dimension
 	for i in range(4, d, 2):
-		var previous_shift = positional_shift[i/2 - 2]
-		var current_shift_x = previous_shift[0] * dimensions[i] + (dimensions[i] - 1) * (i / 2) * world.margin
-		# how wide the previous dimension made it * how many times it'll be copies +  margin 
-		# the inbetweens (fencepost problem) * how many times the amrgin is repeated 
+		var previous_shift = positional_shift[i/2 - 2] # previous dimensions shift
+		
+
+		var current_shift_x = previous_shift[0] * dimensions[i] + world.margin
+		# how wide the previous dimension made it * how many times it'll be copies + margin 
+		
+		#take a 3x3x3 minesweeper board (but only examine a horizontal line)
+		# [*** *** ***]
+		# positional_shift[0] stores how many pixels to offset the camera to view the next layer "up/down" over
+		# which stores this distance [*** ] 
+		# [*** *** ***  *** *** ***  *** *** ***]
+		# we now need to solve for that offset [*** *** ***  ]
 		
 		# repeat above but for veritcally
 		var current_shift_y = 0
 		if d >= i + 2: # might not exist it's dimension, remember i is 0th index dimension so it's +2
-			current_shift_y = previous_shift[1] * dimensions[i+1] + (dimensions[i+1] - 1) * (i / 2) * world.margin
+			current_shift_y = previous_shift[1] * dimensions[i+1] + world.margin
 		
 		positional_shift.append([current_shift_x, current_shift_y])
 	
@@ -224,6 +231,7 @@ func multicam_on():
 	
 	
 	#shift each camera the required amount
+	var temp_arr = [0, 102, 206, 308, 414, 516, 620, 722]
 	for i in camera_dict:
 		var delta_x = 0
 		var delta_y = 0
@@ -231,6 +239,9 @@ func multicam_on():
 			delta_x += i[j] * positional_shift[j / 2][0]
 			if j + 1 < len(i):
 				delta_y += i[j + 1] * positional_shift[j / 2][1]
+		if (delta_x not in temp_arr) and (2 not in i):
+			print(i)
+			print(Vector2(delta_x, delta_y))
 		camera_dict[i].position += Vector2(delta_x, delta_y)
 		
 	# finally reparent the world

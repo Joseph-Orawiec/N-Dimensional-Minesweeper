@@ -14,6 +14,7 @@ var d: int # the overall dimension of the board
 var game_grid_container = GridContainer.new()
 
 var margin = 2
+var cell_size = Cell.get_state().get_node_property_value(0, 0)
 
 var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vectors which are useful to loop through for a lot of things
 
@@ -40,7 +41,7 @@ func new_game(dimensions: Array[int], m: int):
 	# generate base container and node
 	var main_grid_container = GridContainer.new()
 	add_child(main_grid_container) # on 1st dimension construction the .reparent wont work as it doesn't have a parent
-	main_grid_container.size = Vector2.ONE * 50
+	main_grid_container.size = Vector2.ONE * cell_size
 	main_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
 	main_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
 	
@@ -77,7 +78,7 @@ func new_game(dimensions: Array[int], m: int):
 			new_grid_container.add_theme_constant_override('h_separation', ((dimension - 1) / 2) * margin)
 			
 			# to calculate size, just multiply the old container's size by how many times it'll be copied, and add the margins of current container
-			# multiplied by 1 minus the dimension size (like a fencepost)
+			# multiplied by 1 minus the dimension size (like a fencepost)  (also margin size scales linearly)
 			new_grid_container.size = main_grid_container.size * Vector2(d, 1) + Vector2(((dimension - 1) / 2) * margin, 0) * (d - 1)
 		else:
 			new_grid_container.add_theme_constant_override('v_separation', ((dimension - 1) / 2) * margin)

@@ -14,9 +14,9 @@ func _ready():
 	world.new_game(board, 3)
 	print("Initializing world")
 	camera.initialize(world, board)
+	camera.multicam_on()
 	camera_borders.initialize(len(board))
-	
-	#camera.make_multicam()
+	camera_borders.show()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
