@@ -59,7 +59,6 @@ offset_bottom = 48.0
 texture = ExtResource("3_hm1t0")
 
 [node name="TextContainer" type="CenterContainer" parent="."]
-visible = false
 texture_filter = 1
 layout_mode = 1
 offset_left = 2.0

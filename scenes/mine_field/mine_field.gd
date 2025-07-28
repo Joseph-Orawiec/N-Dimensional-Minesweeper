@@ -13,8 +13,8 @@ var game_dimensions: Array[int] # size of the mine field
 var d: int # the overall dimension of the board
 var game_grid_container = GridContainer.new()
 
-var margin = 2
-var cell_size = Cell.get_state().get_node_property_value(0, 0)
+var margin = 2 # margin sizes
+var cell_size = Cell.get_state().get_node_property_value(0, 0) # cell width
 
 var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vectors which are useful to loop through for a lot of things
 

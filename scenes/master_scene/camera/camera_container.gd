@@ -306,7 +306,6 @@ func multicam_off():
 	
 	
 	world.reparent(main_container.get_child(0))
-	
 
 func vector_mod(u, v):
 	return Vector2(fposmod(u.x, v.x), fposmod(u.y, v.y))
@@ -367,6 +366,8 @@ func _input(event):
 		for c in cameras:
 			c.zoom = zoom1
 			c.position += position_delta
+			
+		print(zoom1)
 			
 	if event.is_action_pressed("scroll_up", false, true):
 		for c in cameras:
