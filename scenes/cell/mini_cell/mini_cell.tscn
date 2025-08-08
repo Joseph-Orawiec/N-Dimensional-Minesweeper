@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3 uid="uid://dl3i5s1atf28f"]
+
+[ext_resource type="PackedScene" uid="uid://cqyql1grtcbu7" path="res://scenes/cell/mini_cell/digit/digit.tscn" id="1_fexft"]
+[ext_resource type="Script" path="res://scenes/cell/mini_cell/mini_cell.gd" id="1_ojwcn"]
+
+[node name="MiniCell" type="Control"]
+layout_direction = 1
+layout_mode = 3
+anchors_preset = 0
+offset_right = 15.0
+offset_bottom = 15.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ojwcn")
+
+[node name="One" parent="." instance=ExtResource("1_fexft")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 7.0
+offset_bottom = 7.0
+
+[node name="Ten" parent="." instance=ExtResource("1_fexft")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 8.0
+offset_right = 15.0
+offset_bottom = 7.0
+
+[node name="Hundred" parent="." instance=ExtResource("1_fexft")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 8.0
+offset_right = 7.0
+offset_bottom = 15.0
+
+[node name="Thousand" parent="." instance=ExtResource("1_fexft")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 15.0
+offset_bottom = 15.0
