@@ -22,9 +22,9 @@ var is_chording: bool = false
 var is_highlighted: bool = false
 var is_bomb: bool = false
 var has_started: bool = false
-var is_mouse_on_cell = false
+var is_mouse_on_cell: bool = false
 
-var pause = false
+var pause: bool = false
 
 @onready var cell_components = {"inner": $Inner, "highlight": $Highlight, "text container": $TextContainer, "text": $TextContainer/Text, 
 	"flag": $Flag, "bomb": $Bomb}

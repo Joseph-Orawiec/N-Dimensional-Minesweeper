@@ -12,3 +12,6 @@ res://scenes/mine_field/mine_field.tscn
 res://scenes/cell/mini_cell/mini_cell.tscn
 res://scenes/cell/mini_cell/mini_cell.gd
 res://scenes/cell/mini_cell/digit/digit.tscn
+res://scenes/cell/MinicellContainer.gd
+res://scenes/cell/minicell/digit/digit.tscn
+res://scenes/cell/cell.gd

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cqyql1grtcbu7"]
 
-[ext_resource type="Script" path="res://scenes/cell/mini_cell/digit/digit.gd" id="1_2bumk"]
+[ext_resource type="Script" path="res://scenes/cell/minicell/digit/digit.gd" id="1_gmiv3"]
 
 [node name="Digit" type="Control"]
 layout_mode = 3
@@ -11,15 +11,17 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_2bumk")
+script = ExtResource("1_gmiv3")
 
 [node name="1" type="ColorRect" parent="."]
+visible = false
 layout_mode = 0
 offset_right = 3.0
 offset_bottom = 7.0
 color = Color(0, 0, 0, 1)
 
 [node name="2" type="ColorRect" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 4.0
 offset_right = 7.0
@@ -27,12 +29,14 @@ offset_bottom = 7.0
 color = Color(0, 0, 0, 1)
 
 [node name="3" type="ColorRect" parent="."]
+visible = false
 layout_mode = 0
 offset_right = 7.0
 offset_bottom = 3.0
 color = Color(0, 0, 0, 1)
 
 [node name="6" type="ColorRect" parent="."]
+visible = false
 layout_mode = 0
 offset_top = 4.0
 offset_right = 7.0
