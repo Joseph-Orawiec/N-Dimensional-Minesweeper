@@ -26,8 +26,14 @@ var is_mouse_on_cell: bool = false
 
 var pause: bool = false
 
-@onready var cell_components = {"inner": $Inner, "highlight": $Highlight, "text container": $TextContainer, "text": $TextContainer/Text, 
-	"flag": $Flag, "bomb": $Bomb}
+@onready var cell_components = {
+	"inner": $Inner, 
+	"highlight": $Highlight, 
+	"text container": $TextContainer, 
+	"text": $TextContainer/Text, 
+	"flag": $Flag, 
+	"bomb": $Bomb
+	}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -173,7 +179,7 @@ func toggle_highlight():
 #region Mouse Detection
 # This bug is awful
 # if cells are off the window and offscreen off the viewports, the world "persists" outside of their contained subviewport
-# containers and even the godot window. It would pick up mouse input if it's overing to the left of the window
+# containers and even the godot window. It would pick up mouse input if it's hovering to the left of the window
 # and cells would react, so this means mouse_entered/exit events cant be trusted and i need to write one myself
 # for the longest time i thought the subviewport containers were the issue
 
@@ -183,6 +189,7 @@ func toggle_highlight():
 
 # Handles what mouse_entered and mouse_exited would normally do but with the nuance of the multiple viewports
 func _on_area_2d_input_event(viewport, event, shape_idx):
+	print("ADWKHJADWKJHADWKJH")
 	# loop to get parent viewport, notable viewport is the mainviewport and not what we want
 	var viewport_container = get_parent()
 	while not viewport_container is SubViewportContainer:
@@ -204,6 +211,7 @@ func _input(event):
 		else:
 			if not get_global_rect().has_point(event.position):
 				_on_mouse_exited()
+				
 
 # handles when the cursor enters and exits
 func _on_mouse_entered():

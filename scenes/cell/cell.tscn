@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/cell/cell.gd" id="1_r1v4s"]
 [ext_resource type="Texture2D" uid="uid://d1euh7y5k5qn0" path="res://assets/sprites/flag.png" id="2_fw78r"]
-[ext_resource type="Texture2D" uid="uid://c3ppqou7rktgb" path="res://assets/sprites/bomb.png" id="3_hm1t0"]
+[ext_resource type="Texture2D" uid="uid://bwf3r3kuiqwhx" path="res://assets/sprites/bomb.png" id="3_hm1t0"]
 [ext_resource type="PackedScene" uid="uid://dl3i5s1atf28f" path="res://scenes/cell/minicell/minicell.tscn" id="4_54en1"]
 [ext_resource type="Texture2D" uid="uid://dao03o12ef4q8" path="res://assets/marking template.png" id="4_nhvnf"]
 [ext_resource type="Script" path="res://scenes/cell/MinicellContainer.gd" id="5_tpruc"]
@@ -48,10 +48,10 @@ metadata/_edit_lock_ = true
 visible = false
 texture_filter = 1
 layout_mode = 0
-offset_left = 11.0
-offset_top = 9.0
-offset_right = 38.0
-offset_bottom = 41.0
+offset_left = 13.0
+offset_top = 10.0
+offset_right = 40.0
+offset_bottom = 42.0
 texture = ExtResource("2_fw78r")
 metadata/_edit_lock_ = true
 
@@ -59,10 +59,10 @@ metadata/_edit_lock_ = true
 visible = false
 texture_filter = 1
 layout_mode = 0
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 48.0
-offset_bottom = 48.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 43.0
+offset_bottom = 43.0
 texture = ExtResource("3_hm1t0")
 metadata/_edit_lock_ = true
 
@@ -99,6 +99,7 @@ offset_top = 2.0
 offset_right = 51.0
 offset_bottom = 51.0
 texture = ExtResource("4_nhvnf")
+metadata/_edit_lock_ = true
 
 [node name="MinicellContainer" type="Control" parent="."]
 anchors_preset = 0
@@ -107,6 +108,7 @@ offset_top = 3.0
 offset_right = 50.0
 offset_bottom = 50.0
 script = ExtResource("5_tpruc")
+metadata/_edit_lock_ = true
 
 [node name="1" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2

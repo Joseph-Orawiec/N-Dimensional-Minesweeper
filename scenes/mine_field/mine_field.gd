@@ -162,9 +162,9 @@ func _on_initialize(v):
 func _on_zero_chain(v0: Array[int]):
 	var nodes_checked: Array[Array] = [v0] # keep track of opened nodes using their vector key
 	var node_border: Array[Array] = [v0] # keep track of what nodes are at the border in order to expand on
-	var is_processing: bool = true # true to first enter the loop 
+	var is_searching: bool = true # true to first enter the loop 
 	
-	while is_processing:
+	while is_searching:
 		var new_border = [] # generate the new node border
 		for v in node_border:
 			for u in adjacency_vector_dictionary[d]:
@@ -174,7 +174,7 @@ func _on_zero_chain(v0: Array[int]):
 					new_border.append(current_node)
 		
 		# continue searching?
-		is_processing = false # assume false
+		is_searching = false # assume false
 		
 		# replace node_border with only 0 cells (to later expand on)
 		var culled_new_border: Array[Array] = []
@@ -182,7 +182,7 @@ func _on_zero_chain(v0: Array[int]):
 			if node_dict.get(v, null) != null: # only check if the node exists first
 				nodes_checked.append(v)
 				if node_dict[v].id == 0: # if atleast one cell is 0
-					is_processing = true
+					is_searching = true
 					# add to the culled list, erasing from other array would require to loop by index and subtract 1 for every removal (as to not skip)
 					culled_new_border.append(v) # numbers (and mines) will stop the opening
 					
