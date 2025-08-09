@@ -177,32 +177,6 @@ func toggle_highlight():
 
 
 #region Mouse Detection
-# This bug is awful
-# if cells are off the window and offscreen off the viewports, the world "persists" outside of their contained subviewport
-# containers and even the godot window. It would pick up mouse input if it's hovering to the left of the window
-# and cells would react, so this means mouse_entered/exit events cant be trusted and i need to write one myself
-# for the longest time i thought the subviewport containers were the issue
-
-# cells will not pickup on _input() so inputs being accepted somewhere else and i can't figure
-# out how to get that input (to determine when mouse exited)
-# so instead i'm going to call up to the MineField node to manage that
-
-# Handles what mouse_entered and mouse_exited would normally do but with the nuance of the multiple viewports
-func _on_area_2d_input_event(viewport, event, shape_idx):
-	print("ADWKHJADWKJHADWKJH")
-	# loop to get parent viewport, notable viewport is the mainviewport and not what we want
-	var viewport_container = get_parent()
-	while not viewport_container is SubViewportContainer:
-		viewport_container = viewport_container.get_parent()
-	
-	# verify if mouse input is WITHIN viewport bounds
-	if event is InputEventMouseButton or event is InputEventMouseMotion:
-		var is_within_x_bounds: bool = (viewport_container.position.x <= event.position.x) and (event.position.x < (viewport_container.position + viewport_container.size).x)
-		var is_within_y_bounds: bool = (viewport_container.position.y <= event.position.y) and (event.position.y < (viewport_container.position + viewport_container.size).y)
-		
-		if (is_within_x_bounds and is_within_y_bounds):
-			_on_mouse_entered()
-			
 func _input(event):
 	if event is InputEventMouseButton or event is InputEventMouseMotion:
 		if not is_mouse_on_cell:

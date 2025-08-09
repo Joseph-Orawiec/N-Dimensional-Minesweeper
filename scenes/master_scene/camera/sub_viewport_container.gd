@@ -17,6 +17,18 @@ func _process(delta):
 func _on_resized():
 	get_child(0).size = size
 	
+
+# This bug is awful
+# if cells are off the window and offscreen off the viewports, the world "persists" outside of their contained subviewport
+# containers and even the godot window. It would pick up mouse input if it's hovering to the left of the window
+# and cells would react, so this means mouse_entered/exit events cant be trusted and i need to write one myself
+# for the longest time i thought the subviewport containers were the issue
+
+# cells will not pickup on _input() so inputs being accepted somewhere else and i can't figure
+# out how to get that input (to determine when mouse exited)
+# so instead i'm going to call up to the MineField node to manage that
+
+# Handles what mouse_entered and mouse_exited would normally do but with the nuance of the multiple viewports
 func _input(event):
 	#inclusive on 0, exclusive on 720
 	#[0, size.y - 1]
