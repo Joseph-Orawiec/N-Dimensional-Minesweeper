@@ -1,9 +1,5 @@
-extends Node
+extends SubViewport
 
-#RR GG BB AA
-
-
-var red = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -14,5 +10,4 @@ func _ready():
 func _process(delta):
 	pass
 
-func initialize_red(dimension):
-	pass
+

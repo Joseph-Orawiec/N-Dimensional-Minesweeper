@@ -8,6 +8,7 @@ signal chord_canceled
 signal flagged
 signal clicked(id)
 signal toggle_highlighted
+signal cell_marked
 
 enum Colors {UNKOWN, PRESSED, OPENED, FLAGGED_WRONG, BOMB}
 var  colors = {Colors.UNKOWN: Color.hex(0xC6C6C6FF), Colors.PRESSED: Color.hex(0x808080FF), Colors.OPENED: Color.hex(0xFFFFFFFF),
@@ -24,6 +25,8 @@ var is_bomb: bool = false
 var has_started: bool = false
 var is_mouse_on_cell: bool = false
 
+var mark_toggle: bool = false
+
 var pause: bool = false
 
 @onready var cell_components = {
@@ -32,8 +35,10 @@ var pause: bool = false
 	"text container": $TextContainer, 
 	"text": $TextContainer/Text, 
 	"flag": $Flag, 
-	"bomb": $Bomb
+	"bomb": $Bomb,
+	"minicell container": $MinicellContainer
 	}
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -67,10 +72,31 @@ func _process(delta):
 			if not is_flagged:
 				flagged.emit(pid, true) # emit signal to increment/decrement counter
 				cell_components["flag"].visible = true
+				cell_components["minicell container"].reset()
 			else:
 				flagged.emit(pid, false)
 				cell_components["flag"].visible = false
 			is_flagged = not is_flagged
+			
+		# marking logic
+		if Input.is_action_just_pressed("q"):
+			cell_components["minicell container"].set_mark(7, 0)
+		if Input.is_action_just_pressed("w"):
+			cell_components["minicell container"].set_mark(8, 0)
+		if Input.is_action_just_pressed("e"):
+			cell_components["minicell container"].set_mark(9, 0)
+		if Input.is_action_just_pressed("a"):
+			cell_components["minicell container"].set_mark(4, 0)
+		if Input.is_action_just_pressed("s"):
+			cell_components["minicell container"].set_mark(5, 0)
+		if Input.is_action_just_pressed("d"):
+			cell_components["minicell container"].set_mark(6, 0)
+		if Input.is_action_just_pressed("z"):
+			cell_components["minicell container"].set_mark(1, 0)
+		if Input.is_action_just_pressed("x"):
+			cell_components["minicell container"].set_mark(2, 0)
+		if Input.is_action_just_pressed("c"):
+			cell_components["minicell container"].set_mark(3, 0)
 	else:
 		# check for chording logic
 		if Input.is_action_pressed("chord"):
@@ -79,6 +105,35 @@ func _process(delta):
 		if Input.is_action_just_released("chord"): # execute chord
 			is_chording = false
 			chord_released.emit(pid)
+		
+		# marking logic
+		if Input.is_action_just_pressed("q"):
+			cell_marked.emit(mark_toggle, pid, 7, fid)
+			mark_toggle = not mark_toggle
+		if Input.is_action_just_pressed("w"):
+			cell_marked.emit(mark_toggle, pid, 8, fid)
+			mark_toggle = not mark_toggle
+		if Input.is_action_just_pressed("e"):
+			cell_marked.emit(mark_toggle, pid, 9, fid)
+			mark_toggle = not mark_toggle
+		if Input.is_action_just_pressed("a"):
+			cell_marked.emit(mark_toggle, pid, 4, fid)
+			mark_toggle = not mark_toggle
+		if Input.is_action_just_pressed("s"):
+			cell_marked.emit(mark_toggle, pid, 5, fid)
+			mark_toggle = not mark_toggle
+		if Input.is_action_just_pressed("d"):
+			cell_marked.emit(mark_toggle, pid, 6, fid)
+			mark_toggle = not mark_toggle
+		if Input.is_action_just_pressed("z"):
+			cell_marked.emit(mark_toggle, pid, 1, fid)
+			mark_toggle = not mark_toggle
+		if Input.is_action_just_pressed("x"):
+			cell_marked.emit(mark_toggle, pid, 2, fid)
+			mark_toggle = not mark_toggle
+		if Input.is_action_just_pressed("c"):
+			cell_marked.emit(mark_toggle, pid, 3, fid)
+			mark_toggle = not mark_toggle
 
 #region Winning and Losing
 # special flag function for when a game is won, flag all other mines
@@ -118,33 +173,33 @@ func lost():
 # player click
 func click(is_emitting:bool = true):
 	# Whenever player clicks a mine or a cell is clicked indirectly via chording or 0 chain
-	if not is_flagged:
-		if not is_pressed:
-			is_pressed = true
-			if is_bomb:
-				# special bomb case
-				cell_components["bomb"].visible = true
-				cell_components["inner"].color = colors[Colors.BOMB]
+	if (not is_flagged) and (not is_pressed):
+		cell_components["minicell container"].reset()
+		is_pressed = true
+		if is_bomb:
+			# special bomb case
+			cell_components["bomb"].visible = true
+			cell_components["inner"].color = colors[Colors.BOMB]
+		else:
+			if id == 0 and is_bomb == false:
+				cell_components["inner"].color = colors[Colors.OPENED]
 			else:
-				if id == 0 and is_bomb == false:
-					cell_components["inner"].color = colors[Colors.OPENED]
-				else:
-					cell_components["text container"].visible = true
-					
-					# https://www.desmos.com/calculator/i27t16hwwj
-					var temp_color = cos((2 * PI)/80 * (id + 4))
-					cell_components["inner"].color = Color(1, temp_color, temp_color)
-					#cell_components["inner"].color = colors[Colors.OPENED]
-					cell_components["text"].text = str(id)
-			
-			# prevent trying to zero chain recursively as previously implemented
-			if id == 0 and is_emitting and is_bomb == false:
-				zero_chain.emit(pid)
-			
-			clicked.emit(pid)
-			
-			if is_bomb:
-				set_process(false)
+				cell_components["text container"].visible = true
+				
+				# https://www.desmos.com/calculator/i27t16hwwj
+				var temp_color = cos((2 * PI)/80 * (id + 4))
+				cell_components["inner"].color = Color(1, temp_color, temp_color)
+				#cell_components["inner"].color = colors[Colors.OPENED]
+				cell_components["text"].text = str(id)
+		
+		# prevent trying to zero chain recursively as previously implemented
+		if id == 0 and is_emitting and is_bomb == false:
+			zero_chain.emit(pid)
+		
+		clicked.emit(pid)
+		
+		if is_bomb:
+			set_process(false)
 
 #region Chording logic
 # this function is for when a neighboring cell is getting chorded, this cell needs to change asset
@@ -185,7 +240,6 @@ func _input(event):
 		else:
 			if not get_global_rect().has_point(event.position):
 				_on_mouse_exited()
-				
 
 # handles when the cursor enters and exits
 func _on_mouse_entered():

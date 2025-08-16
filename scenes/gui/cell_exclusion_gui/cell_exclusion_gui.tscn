@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3 uid="uid://ltyacxmf0v1h"]
+
+[ext_resource type="Script" path="res://scenes/gui/cell_exclusion_gui/cell_exclusion_gui.gd" id="1_eeinc"]
+
+[node name="GridContainer" type="GridContainer"]
+offset_right = 300.0
+offset_bottom = 300.0
+columns = 3
+script = ExtResource("1_eeinc")
+
+[node name="7" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "7"
+
+[node name="8" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "8"
+
+[node name="9" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "9"
+
+[node name="4" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "4"
+
+[node name="5" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "5"
+
+[node name="6" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "6"
+
+[node name="1" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "1"
+
+[node name="2" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "2"
+
+[node name="3" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "3"

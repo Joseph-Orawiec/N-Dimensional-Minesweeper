@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://6fhgqa1ph327"]
+
+[ext_resource type="Script" path="res://scenes/master_scene/master_scene.gd" id="1_o1y4r"]
+[ext_resource type="Script" path="res://scenes/master_scene/camera/camera_container.gd" id="2_nnig0"]
+[ext_resource type="PackedScene" uid="uid://ltyacxmf0v1h" path="res://scenes/gui/cell_exclusion_gui/cell_exclusion_gui.tscn" id="5_1wfap"]
+[ext_resource type="PackedScene" uid="uid://dpxp0s2375nlw" path="res://scenes/mine_field/mine_field.tscn" id="6_ua528"]
+[ext_resource type="Script" path="res://scenes/master_scene/camera_borders/camera_borders.gd" id="7_bpfhd"]
+
+[node name="MasterScene" type="CanvasLayer"]
+script = ExtResource("1_o1y4r")
+
+[node name="CameraContainer" type="GridContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+script = ExtResource("2_nnig0")
+
+[node name="MineField" parent="." instance=ExtResource("6_ua528")]
+
+[node name="CameraBorders" type="GridContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+script = ExtResource("7_bpfhd")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+
+[node name="GridContainer" parent="SubViewportContainer/SubViewport" instance=ExtResource("5_1wfap")]

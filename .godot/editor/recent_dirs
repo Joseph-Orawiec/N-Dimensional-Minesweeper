@@ -1,7 +1,6 @@
-res://scenes/cell/digit_container
+res://
+res://scenes/gui
 res://scenes/master_scene
 res://scenes/master_scene/camera
 res://assets
 res://scenes/mine_field
-res://scenes/gui
-res://

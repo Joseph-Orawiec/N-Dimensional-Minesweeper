@@ -20,7 +20,7 @@ offset_right = 53.0
 offset_bottom = 53.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-mouse_filter = 1
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("1_r1v4s")
 metadata/_edit_lock_ = true
@@ -52,6 +52,7 @@ offset_left = 13.0
 offset_top = 10.0
 offset_right = 40.0
 offset_bottom = 42.0
+mouse_filter = 2
 texture = ExtResource("2_fw78r")
 metadata/_edit_lock_ = true
 
@@ -63,6 +64,7 @@ offset_left = 10.0
 offset_top = 10.0
 offset_right = 43.0
 offset_bottom = 43.0
+mouse_filter = 2
 texture = ExtResource("3_hm1t0")
 metadata/_edit_lock_ = true
 
@@ -73,9 +75,11 @@ offset_left = 2.0
 offset_top = 2.0
 offset_right = 48.0
 offset_bottom = 48.0
+mouse_filter = 2
 metadata/_edit_lock_ = true
 
 [node name="Text" type="Label" parent="TextContainer"]
+texture_filter = 1
 layout_mode = 2
 label_settings = SubResource("LabelSettings_0si0s")
 horizontal_alignment = 1
@@ -107,6 +111,7 @@ offset_left = 3.0
 offset_top = 3.0
 offset_right = 50.0
 offset_bottom = 50.0
+mouse_filter = 2
 script = ExtResource("5_tpruc")
 metadata/_edit_lock_ = true
 
@@ -114,6 +119,7 @@ metadata/_edit_lock_ = true
 layout_mode = 2
 offset_top = 32.0
 offset_bottom = 47.0
+metadata/_edit_lock_ = true
 
 [node name="2" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2
@@ -121,6 +127,7 @@ offset_left = 16.0
 offset_top = 32.0
 offset_right = 31.0
 offset_bottom = 47.0
+metadata/_edit_lock_ = true
 
 [node name="3" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2
@@ -128,11 +135,13 @@ offset_left = 32.0
 offset_top = 32.0
 offset_right = 47.0
 offset_bottom = 47.0
+metadata/_edit_lock_ = true
 
 [node name="4" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2
 offset_top = 16.0
 offset_bottom = 31.0
+metadata/_edit_lock_ = true
 
 [node name="5" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2
@@ -140,6 +149,7 @@ offset_left = 16.0
 offset_top = 16.0
 offset_right = 31.0
 offset_bottom = 31.0
+metadata/_edit_lock_ = true
 
 [node name="6" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2
@@ -147,16 +157,20 @@ offset_left = 32.0
 offset_top = 16.0
 offset_right = 47.0
 offset_bottom = 31.0
+metadata/_edit_lock_ = true
 
 [node name="7" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2
+metadata/_edit_lock_ = true
 
 [node name="8" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2
 offset_left = 16.0
 offset_right = 31.0
+metadata/_edit_lock_ = true
 
 [node name="9" parent="MinicellContainer" instance=ExtResource("4_54en1")]
 layout_mode = 2
 offset_left = 32.0
 offset_right = 47.0
+metadata/_edit_lock_ = true

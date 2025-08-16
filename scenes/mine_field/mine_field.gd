@@ -21,6 +21,7 @@ var adjacency_vector_dictionary: Dictionary = {} #holds arrays of adjacency vect
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	game_grid_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -40,6 +41,7 @@ func new_game(dimensions: Array[int], m: int):
 	
 	# generate base container and node
 	var main_grid_container = GridContainer.new()
+	main_grid_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(main_grid_container) # on 1st dimension construction the .reparent wont work as it doesn't have a parent
 	main_grid_container.size = Vector2.ONE * cell_size
 	main_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
@@ -69,6 +71,7 @@ func new_game(dimensions: Array[int], m: int):
 		
 		# setup new grid container to hold other GCs
 		var new_grid_container = GridContainer.new()
+		new_grid_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		new_grid_container.size_flags_horizontal = GridContainer.SIZE_EXPAND_FILL
 		new_grid_container.size_flags_vertical = GridContainer.SIZE_EXPAND_FILL
 		main_grid_container.reparent(new_grid_container) # 2ond Dimension+ node will already have a parent
@@ -256,6 +259,18 @@ func _on_toggle_highlighted(v):
 		if current_node != null: # if exists, switch_highlight
 			current_node.toggle_highlight()
 
+func _on_cell_marked(mark_toggle, v, location, n):
+	for u in adjacency_vector_dictionary[d]:
+		var current_node = node_dict.get(add(v, u), null)
+		if (current_node != null) and (not current_node.is_pressed) and (not current_node.is_flagged): # if exists
+			# add or remove
+			if not mark_toggle:
+				current_node.cell_components["minicell container"].set_mark(location, n)
+			else:
+				current_node.cell_components["minicell container"].set_mark(location, 0)
+
+#endregion
+
 #region Helper functions
 # a helper function to jam all the .connects into so it's in one place
 func connect_node_signals(n):
@@ -267,6 +282,7 @@ func connect_node_signals(n):
 	n.flagged.connect(_on_cell_flagged)
 	n.clicked.connect(_on_cell_clicked)
 	n.toggle_highlighted.connect(_on_toggle_highlighted)
+	n.cell_marked.connect(_on_cell_marked)
 
 # handles the logic of generating adjacency vectors for any dimension
 func generate_adjacency_vectors(dimension: int):
